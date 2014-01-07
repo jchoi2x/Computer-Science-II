@@ -1,4 +1,5 @@
 Computer-Science-II
 ===================
 
-CS2
+Computer Science II at University of Central Florida Spring 2014
+
