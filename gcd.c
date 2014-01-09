@@ -12,7 +12,7 @@ int main(){
   printf("\nGreatest common Divisor: %d\n",gcd(m,n));
 }
 
-int gcd(int m , int n ){
+int gcd( int m , int n ){
   if ( n == 0 ){
     return m ;
   }
