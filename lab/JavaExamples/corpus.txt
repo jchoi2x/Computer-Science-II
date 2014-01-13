@@ -1,0 +1,2 @@
+Here is a silly input file.
+Only one of the words it contains is repeated.
