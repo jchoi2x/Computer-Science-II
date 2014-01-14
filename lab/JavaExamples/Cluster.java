@@ -1,14 +1,14 @@
 import java.util.*;
 
-public class Cluster <AnyType extends Comparable<AnyType>> {
+public class Cluster <SomeType extends Comparable<SomeType>> {
 
-	private ArrayList<AnyType> myList;
+	private ArrayList<SomeType> myList;
 
 	Cluster(int initCapacity) {
-		myList = new ArrayList<AnyType>(initCapacity);
+		myList = new ArrayList<SomeType>(initCapacity);
 	}
 
-	public void put(AnyType myObject) {
+	public void put(SomeType myObject) {
 		myList.add(myObject);
 	}
 
@@ -17,7 +17,7 @@ public class Cluster <AnyType extends Comparable<AnyType>> {
 	}
 
 	void print() {
-		for (AnyType a : myList)
+		for (SomeType a : myList)
 			System.out.println(a);
 	}
 
