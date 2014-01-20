@@ -1,0 +1,37 @@
+function initiate
+    Read first line containing number of graphs 
+    for ( i = 0 ; i < numGraphs ; i++ )
+        read starting vertex
+        read number of nodes
+
+        create a matrix of size n
+
+        calculate breadth first search
+        calculate depth first search 
+
+
+function breadth first (queue)
+    create visited array and fill with false
+    put the first starting vertex on the queue
+
+    while the queue not empty
+        dq = dequeue
+        if dq'd is unvisited
+            mark as visited and print dq'd
+
+        for ( i = 0 ; i < n-1 ; n++ )
+            if  matrix[dq][i] is adjacent and unvisited 
+                add to the queue
+                mark as visited and print i 
+                make dq equal to  i (visit i)
+
+
+function depthFirstRec ( int w ) 
+    if ( w == 0 )
+        print w
+    
+    for ( int i = 0 ; i < n-1 ; i++ ){
+        if matrix[w][i] is adjacent and unvisited visited[i] = false
+            print j
+            switch to that column by recursive call "depthFirst(i)"
+    }

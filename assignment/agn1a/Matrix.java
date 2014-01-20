@@ -44,27 +44,6 @@ public class Matrix {
 		}
 	}
 
-	public Matrix(int[][] m) {
-
-		this.matrix = new TreeMap<Integer, ArrayList<Integer>>();
-		this.adjMatrix = m ;
-		this.stack = new Stack<Integer>();
-		this.queue = new LinkedList<Integer>();
-
-
-		this.currRow = 0;
-		this.currCol = 0;
-		this.nXn = m.length;
-		this.full = false;
-
-		parent  = new Integer[this.nXn];
-		visited = new Boolean[this.nXn];
-		// Fill visited array with 0's
-		for ( int i = 0 ; i < nXn ; i++ ){
-			visited[i] = false;
-		}
-	}
-
 	/**
 	 * If matrix not full, adds given arg (insVal) to the next available index (currCol), and increments
 	 * currCol.  Then it checks if column is full ( currCol == nXn ), and if it is ( currRow == nXn ),
@@ -102,25 +81,6 @@ public class Matrix {
 		}
 	}
 
-	public int getNextInRow(int rowNum,int index){
-		// If recursion hasn't reached end of row
-		if ( index < this.matrix.get(rowNum).size() ){
-			// If matrix[rowNum][i] == 1 and visited matrix says unvisited
-			if ( matrix.get(rowNum).get(index) == 1 && visited[index] == false && parent[rowNum] != null && parent[rowNum] != index ){
-				parent[index] = rowNum ;
-				visited[index] = true;
-				return index ;
-			}
-			else{
-				return getNextInRow(rowNum,index+1);
-			}
-		}
-		// else return -1 for not found.
-		else {
-			return -1 ;
-		}
-	}
-
 	/**
 	 * Prints the matrix (for debugging purposes)
 	 */
@@ -132,20 +92,13 @@ public class Matrix {
 			System.out.println();
 		}
 		System.out.println();
-		for ( int i = 0 ; i < visited.length ; i++ ){
-			if (visited[i]) System.out.printf("T ");
-			else System.out.print("F ");
-		}
-		System.out.println();
+// 		for ( int i = 0 ; i < visited.length ; i++ ){
+// 			if (visited[i]) System.out.printf("T ");
+// 			else System.out.print("F ");
+// 		}
+// 		System.out.println();
 	}
 
-	/**
-	 *
-	 *
-	 *
-	 *
-	 *
-	 */
 	public void depthFirst(int vFirst){
 		//vFirst = 0, n = 6
 		int v,i;
@@ -187,10 +140,8 @@ public class Matrix {
 	public void breadthFirst(int first) {
 		int rowNum;     // first = 0; p = 6
 		int[] nodeVisited = new int[nXn-1];
-        
 		// Add the first vertices
 		queue.add(first);
-
 
 		while (!queue.isEmpty()) {
 
