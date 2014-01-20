@@ -4,13 +4,15 @@
 #include "stack.h"
 #define EMPTY -1
 
-int ** readIn(int n);
-int readGraph();
-void printMatrix(int ** matrix, int n);
-
+// The gravy train
 void breadthFirst( int ** matrix, int startVertex, int matrixSize , struct queue * q );
 void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s);
 void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited );
+
+// Utilities
+int ** readIn(int n);
+int readGraph();
+void printMatrix(int ** matrix, int n);
 
 int main(){
     int numGraphs = 0 ;
@@ -24,63 +26,79 @@ int main(){
 
 
 
-// good
 void breadthFirst( int ** matrix, int startVertex, int matrixSize , struct queue * q ){
-    int dq ;
-    int visited[matrixSize] ;
-    int i = 0 ;
-    for ( i = 0 ; i < matrixSize ; i++ ) visited[i] = 0 ;
+    // Initialize variables required
+    int dq ;                        // Used to hold dequeued values
+    int visited[matrixSize] ;       // Array used to keep track of visited vertexes
+    int i = 0 ;                     // Used for the for loop
+    for ( i = 0 ; i < matrixSize ; i++ ) visited[i] = 0 ;   // Fill the newly visited array with 0's (for false)
 
-    // Queue the first vertex and mark as visited
+    // Enqueue the first vertex and mark as visited
     enqueue(q,startVertex);
     visited[startVertex] = 1 ;
 
+    // While the queue is not empty
     while (!queue_empty(q)){
-        // Dequeue and print
+        // Dequeue and print dequeued value
         dq = dequeue(q);
         printf("%d ",dq);
 
         int j = 0 ;
 
-        // Look for all unvisited 1's in the row of dequeued (matrix[dq][*]) that is unvisited
+        /*
+         * Move to row # dq, and for each unvisited 1 in that row, add the column # to the queue and
+         * mark as visited.
+         */
         for ( j = 0 ; j < matrixSize ; j++ ){
-            // if a 1 in row of dq, and it is unvisited, add to queue and mark visited
+            // if there is a 1 in row # dq and column # j that is unvisited, add to queue and mark as visited
             if ( matrix[dq][j] == 1 && visited[j] == 0 ){
                 enqueue(q,j);
                 visited[j] = 1 ;
-                // dq = j ;
             }
         }
     }
 }
 
-void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited ){
-}
 
+/*
+ * All vertices, except the first, is printed and marked as visited when it is pushed to the stack
+ */
 void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s){
-    int * visited = (int *) malloc(sizeof(int)*matrixSize);
-    int i = 0 ;
-    for ( i = 0 ; i < matrixSize ; i++ ) visited[i] = 0 ;
+    // Initialize variables required
+    int * visited = (int *) malloc(sizeof(int)*matrixSize); // Array to hold visited vertices
+    int i = 0 ; // Used for the for loop
+    for ( i = 0 ; i < matrixSize ; i++ ) visited[i] = 0 ; // Fill the visited array with 0's (for false)
 
+    // Push the starting index onto the stack and mark as visited
     push(&s,startVertex);
     visited[startVertex]= 1;
-    int vertex ;
+
+    int vertex ;            // Holds popped off vertices
+    // while the stack isn't empty
     while (!empty(&s)){
-        vertex = pop(&s);
+        vertex = pop(&s);   // Pop one off the stack
+
+        // If popped value is the startVertex, it must be explicitly made to print
         if ( vertex == startVertex  ) printf("%d ",vertex);
 
+        /*
+         * for every element in the row of 'vertex', if matrix contains a 1 and it is unvisited
+         * push it to the stack, mark as visited, and then print it.
+         * */
         for ( i = 0 ; i < matrixSize ; i++ ){
             if ((matrix[vertex][i]==1) && (visited[i]==0)) {
                 push(&s,i);
                 visited[i] = 1;
                 printf("%d ",i);
-                // vertex = i ;
             }
         }
     }
 }
 
 
+
+void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited ){
+}
 
 
 
