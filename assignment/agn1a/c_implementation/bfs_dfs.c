@@ -7,7 +7,7 @@
 // The gravy train
 void breadthFirst( int ** matrix, int startVertex, int matrixSize , struct queue * q );
 void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s);
-void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited );
+void depthFirstRecursive(int ** matrix, int center, int matrixSize, int * visited );
 
 // Utilities
 int ** readIn(int n);
@@ -97,15 +97,6 @@ void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s){
 
 
 
-void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited ){
-}
-
-
-
-
-
-
-
 /*
  * Read utilities
  */
@@ -122,12 +113,14 @@ int readGraph(){
     init(q);
     struct stack stk;
     initialize(&stk);
+
     int * visited = (int *) malloc(sizeof(int)*n);
     int i = 0 ;
     for ( i = 0 ; i < n ; i++ ) visited[i] = 0 ;
 
-    printf("\nBreadth First: ");
-    breadthFirst(matrix,startVertex,n,q);
+
+    printf("\nDepth First Recursive: ");
+    depthFirstRecursive(matrix,0,n,visited);
 
 
     printf("\nDepth First: ");
@@ -135,11 +128,6 @@ int readGraph(){
     printf("\n");
     printf("\n");
 
-/*
-    printf("\ndepth first recursive: ");
-    depthfirstrecursive(matrix,startvertex,n,visited);
-    printf("\n");
-*/
     free(q);
     free(visited);
     free(matrix);
@@ -171,4 +159,20 @@ void printMatrix(int ** matrix, int n){
         printf("\n");
     }
     printf("\n");
+}
+void depthFirstRecursive(int ** matrix, int center, int matrixSize, int * visited ){
+
+  // go to center row
+
+  // print everything not marked as visited, and recursive call
+  int i = 0 ;
+  for ( i = 0 ; i < matrixSize; i++ ){
+    visited[i]=1;
+    if ( matrix[center][i] == 1 && visited[i] == 0 ){
+      printf("%d ",i);
+      depthFirstRecursive(matrix,i,matrixSize,visited);
+    }
+  }
+
+  // return
 }
