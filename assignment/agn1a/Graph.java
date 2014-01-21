@@ -6,6 +6,10 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Graph {
+	/**
+	 * Immediately begins BFS and DFS upon instantiation with filename
+	 * @param fileName
+	 */
 	public Graph( String fileName ){
 		this.readIn(fileName);
 	}
@@ -33,9 +37,9 @@ public class Graph {
 
 				// Read graph line by line, n times
 				for ( int j = 0 ; j < n_by_n && scan.hasNextLine() ; j++ ){
-          // Read line as one long string, split at whitespace into an array before assigning to aLine
+					// Read line as one long string, split at whitespace into an array before assigning to aLine
 					String[] aLine = scan.nextLine().split("\\s+");
-          // Convert each String element in aLine into an integer and copy into matrix
+					// Convert each String element in aLine into an integer and copy into matrix
 					for ( int k = 0 ; k < n_by_n ; k++ ){
 						matrix[j][k] = Integer.parseInt(aLine[k]);
 					}
@@ -48,59 +52,65 @@ public class Graph {
 				// Depth first search here
 				System.out.printf("\nDFS("+i+","+startVertex+"): ");
 				depthFirst(matrix,startVertex);
-
-				// Make sure all list utilities are empty
-				//stack.empty(); // Make sure the stack is empty for each graph, although it should be regardless
-				// queue.clear(); // Make sure the queue is empty for each graph, although it should be regardless
 			}
+
 		}catch(IOException ex) {
 			System.out.println("ERROR IOException");
 		}
 		System.out.println();
 	}
 
+	/**
+	 * Executes a breadthFirst search
+	 * @param matrix Adjacency Matrix
+	 * @param startVertex Vertex to begin at
+	 */
 	public void breadthFirst(Integer[][] matrix, int startVertex) {
     /* ----------------------------------------------------------------------------------------------------------------
      * Declaration/Initialization
      * ---------------------------------------------------------------------------------------------------------------- */
 		int dq ;                                          // Used to hold dequeued values
-		Queue<Integer> queue = new LinkedList<Integer>(); // Queue
+		Queue<Integer> queue = new LinkedList<Integer>(); // Create instance of Queue
 
-    // Visited array
-		Boolean[] visited = new Boolean[matrix.length] ; // Array used to keep track of visited vertexes
-    // Instantiate visited array
+		// Visited array
+		Boolean[] visited = new Boolean[matrix.length] ;                 // Array used to keep track of visited vertexes
 		for ( int i = 0 ; i < matrix.length ; i++ ) visited[i] = false ; // Fill the newly visited array with 0's (for false)
 
     /* ----------------------------------------------------------------------------------------------------------------
      * Breadth First Algorithm Iterative Implementation
      * ---------------------------------------------------------------------------------------------------------------- */
-		queue.add(startVertex); // Enqueue startVertex and mark as visited
-		visited[startVertex] = true ;
+		queue.add(startVertex);         // add to queue
+		visited[startVertex] = true ;   // mark as visited
 
 		// While the queue is not empty
 		while (!queue.isEmpty()){
-			// Dequeue and print dequeued value
-			dq = queue.remove();
-			System.out.printf("%d ",dq);
+			dq = queue.remove();          // Dequeue from queu
+			System.out.printf("%d ",dq);  // print it
 
+			// for every element in row of dequeued value dq
 			for ( int j = 0 ; j < matrix.length; j++ ){
-				// if there is a 1 in row # dq and column # j that is unvisited, add to queue and mark as visited
+				// If marked as adjacent and it is unvisited
 				if ((matrix[dq][j] == 1) && (!visited[j]) ){
-					queue.add(j);
-					visited[j] = true ;
+					queue.add(j);             // add to queue
+					visited[j] = true ;       // mark as visited
 				}
 			}
 		}
 	}
 
+	/**
+	 * Executes a Breadth first search
+	 * @param matrix Adjacency Matrix
+	 * @param startVertex Vertex to begin at
+	 */
 	public void depthFirst(Integer[][] matrix, int startVertex){
     /* ----------------------------------------------------------------------------------------------------------------
      * Declaration/Initialization
      * ---------------------------------------------------------------------------------------------------------------- */
 		int popped ;                                    // Used to hold dequeued values
-	  Stack<Integer> stack = new Stack<Integer>();    // Create a instance of a stack
+		Stack<Integer> stack = new Stack<Integer>();    // Create a instance of a stack
 
-    // Visited array
+		// Visited array
 		Boolean[] visited = new Boolean[matrix.length] ;                 // Array used to keep track of visited vertexes
 		for ( int i = 0 ; i < matrix.length ; i++ ) visited[i] = false ; // Fill the newly visited array with 0's (for false)
 
@@ -111,15 +121,15 @@ public class Graph {
 
 		stack.push(startVertex);              // push to stack
 		visited[startVertex] = true ;         // mark as visited
-    System.out.printf("%d ",startVertex); // print it
+		System.out.printf("%d ",startVertex); // print it
 
-    // while stack isn't empty
+		// while stack isn't empty
 		while (!stack.isEmpty()){
 			popped = stack.pop(); // Pop from stack
 
-      // For each element in the row of popped
+			// For each element in the row of popped
 			for ( int i = 0 ; i < matrix.length ; i++ ){
-        // If marked as adjacent and it is unvisited
+				// If marked as adjacent and it is unvisited
 				if ( (matrix[popped][i].equals(1)) && (!visited[i])){
 					stack.push(i);                  // push to stack
 					visited[i] = true;              // mark as visited
