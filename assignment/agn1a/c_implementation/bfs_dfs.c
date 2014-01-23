@@ -7,7 +7,8 @@
 // The gravy train
 void breadthFirst( int ** matrix, int startVertex, int matrixSize , struct queue * q );
 void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s);
-void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited );
+void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, char * visited );
+int * getAdjacent(int ** matrix, int matrixSize, int vertex);
 
 // Utilities
 int ** readIn(int n);
@@ -96,10 +97,48 @@ void depthFirst(int ** matrix, int startVertex, int matrixSize, struct stack s){
 }
 
 
+void depthCaller( int ** matrix , int matrixSize ){
+    char * visited = (char *) malloc(sizeof(char)*matrixSize);
 
-void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, int * visited ){
+    int i = 0 ;
+    for ( i = 0 ; i < matrixSize ; i++ ) visited[i] = '0' ;
+
+    while ( visited + i != NULL ){
+        if ( *(visited+i) == '0' ){
+            depthFirstRecursive(matrix,i,matrixSize,visited);
+        }
+        i++ ;
+    }
+}
+void depthFirstRecursive(int ** matrix, int vertex, int matrixSize, char * visited ){
+    int * adj = getAdjacent(matrix,matrixSize,vertex);
+    int i = 0 ;
+    visited[vertex] = 1 ;
+    printf("%d ",vertex);
+    for ( i = 0 ; i < matrixSize ; i++ ){
+        if ( adj[i]  != -1 ){
+            if (visited[adj[i]] == 0 ) {
+                depthFirstRecursive(matrix,i,matrixSize,visited);
+            }
+        }
+    }
 }
 
+int * getAdjacent(int ** matrix, int matrixSize, int vertex){
+    int i = 0 ;
+    int m = 0 ;
+    int * adj = (int *)malloc(sizeof(int)*matrixSize);
+    for ( i = 0 ; i < matrixSize ; i++ ){
+        if (matrix[vertex][i] == 1 ){
+            adj[m] = i ;
+            m++ ;
+        }
+    }
+    for ( ; m < matrixSize ; m++ ){
+        adj[m] = -1 ;
+    }
+    return adj ;
+}
 
 
 
@@ -132,14 +171,10 @@ int readGraph(){
 
     printf("\nDepth First: ");
     depthFirst(matrix,startVertex,n,stk);
-    printf("\n");
+    printf("\nDepth First: ");
+    depthCaller(matrix,n);
     printf("\n");
 
-/*
-    printf("\ndepth first recursive: ");
-    depthfirstrecursive(matrix,startvertex,n,visited);
-    printf("\n");
-*/
     free(q);
     free(visited);
     free(matrix);
