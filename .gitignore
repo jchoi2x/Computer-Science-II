@@ -1,1 +1,40 @@
-.class				
+# OS generated files #
+######################
+
+a.out.dSYM
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+a.out.dSYM
+a.out.js
+a.out.js.map
+# Object files
+*.o
+*.ko
+*.h.gch
+# Libraries
+*.lib
+*.a
+*.class				
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+Computer-Science-I.config
+Computer-Science-I.creator
+Computer-Science-I.creator.user
+Computer-Science-I.files
+Computer-Science-I.includes
