@@ -48,16 +48,16 @@ public class Empirical {
 		}
 		return max;
 	}
-	
+
 
 	public static void readIn(String filename){
-        
-        
+
+
 	    try{
 	        Scanner scan = new Scanner(new FileReader(filename)); // Read from input stream
 	        // read the first line containing number of testcases
 	        int numCases = Integer.parseInt(scan.nextLine().split("\\s+")[0]);
-	        int[] array ; 
+	        int[] array ;
 	        for ( int j = 0  ; j < numCases ; j++ ){
 	            // make temp string array and read into it
                 String[] testCase = scan.nextLine().split("\\s+");
@@ -68,19 +68,19 @@ public class Empirical {
                 }
                 runTest(array,50);
 	        }
-        
-            
+
+
 	    }catch(IOException ex){
             System.out.println("ERROR IOException");
 	    }
-	     
+
 	}
-	
+
 	public static void runTest(int[] array, int numTimes){
 	    double[] avg = new double[3];
-	    long start; 
-	    long end ; 
-	    int sol = 0; 
+	    long start;
+	    long end ;
+	    int sol = 0;
         //----------------------------------------------------------
 	    start = System.nanoTime();
 	    for ( int i = 0 ; i < numTimes ; i++ ){
@@ -88,7 +88,7 @@ public class Empirical {
 	    }
 	    end = System.nanoTime();
         avg[0] = (((end - start) / 1000000.0) / numTimes)*1000000.0 ;
-	    
+
         //----------------------------------------------------------
 	    start = System.nanoTime();
 	    for ( int i = 0 ; i < numTimes ; i++ ){
@@ -96,7 +96,7 @@ public class Empirical {
 	    }
 	    end = System.nanoTime();
         avg[1] = (((end - start) / 1000000.0) / numTimes)*1000000.0 ;
-        
+
         //----------------------------------------------------------
 	    start = System.nanoTime();
 	    for ( int i = 0 ; i < numTimes ; i++ ){
@@ -104,8 +104,8 @@ public class Empirical {
 	    }
 	    end = System.nanoTime();
         avg[2] = (((end - start) / 1000000.0) / numTimes)*1000000.0 ;
-        
-        System.out.println("\n"+sol+" "+String.format("%.0f",avg[0])+" "+String.format("%.0f",avg[1])+" "+String.format("%.0f",avg[2]));
+
+        System.out.println(sol+" "+String.format("%.0f",avg[0])+" "+String.format("%.0f",avg[1])+" "+String.format("%.0f",avg[2]));
 	}
 	public static void main(String [] args) {
 
@@ -114,10 +114,10 @@ public class Empirical {
 		// create and populate array with random ints on range [-1000, 1000]
         //int[] array = getRandArray(N,1000);
 		readIn("infile.txt");
-		
+
 		// start timer
 
-        
+
 
 		// convert nanoseconds to ms and divide by numRuns to get average runtime
 		// for a single function call
