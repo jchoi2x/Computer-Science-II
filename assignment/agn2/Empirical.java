@@ -1,3 +1,8 @@
+/**
+ * James Choi
+ * Computer-Science II - Tues/Thurs 1:30PM
+ * Assignment #2
+ */
 import java.io.*;
 import java.util.*;
 
@@ -51,8 +56,6 @@ public class Empirical {
 
 
 	public static void readIn(String filename){
-
-
 	    try{
 	        Scanner scan = new Scanner(new FileReader(filename)); // Read from input stream
 	        // read the first line containing number of testcases
@@ -73,7 +76,6 @@ public class Empirical {
 	    }catch(IOException ex){
             System.out.println("ERROR IOException");
 	    }
-
 	}
 
 	public static void runTest(int[] array, int numTimes){
@@ -108,19 +110,6 @@ public class Empirical {
         System.out.println(sol+" "+String.format("%.0f",avg[0])+" "+String.format("%.0f",avg[1])+" "+String.format("%.0f",avg[2]));
 	}
 	public static void main(String [] args) {
-
-
-
-		// create and populate array with random ints on range [-1000, 1000]
-        //int[] array = getRandArray(N,1000);
-		readIn("infile.txt");
-
-		// start timer
-
-
-
-		// convert nanoseconds to ms and divide by numRuns to get average runtime
-		// for a single function call
-	//	System.out.println("Runtime: " + (((end - start) / 1000000.0) / numRuns) + "ms");
+		readIn("mcss.txt");
 	}
 }

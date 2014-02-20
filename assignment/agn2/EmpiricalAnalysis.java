@@ -59,11 +59,21 @@ public class EmpiricalAnalysis {
 		}
 		return max;
 	}
+    /**
+     *
+     *  int[] cubeN   = {125,250,500,1000,2000};
+     *  int[] squareN = {25000,50000,100000,200000,400000,800000};
+     *  int[] linearN = {100000, 200000, 400000, 800000, 1600000, 3200000, 6400000};
+     */
 
 	public static void main(String [] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.printf("Enter: ");
 
-		int N = 1000;
-		int numRuns = 50;
+		int N = scan.nextInt();
+		//int N = 200000;
+		int numRuns = 10;
+
 
 		// create and populate array with random ints on range [-1000, 1000]
 		int [] array = new int[N];
@@ -75,14 +85,16 @@ public class EmpiricalAnalysis {
 		final long start = System.nanoTime();
 
 		// run function: mcss_cubed(array), mcss_squared(array), or mcss_linear(array)
-		for (int i = 0; i < numRuns; i++)
-			mcss_squared(array);
-
+		for (int i = 0; i < numRuns; i++){
+            //mcss_cubed(array);
+            //mcss_linear(array);
+			mcss_cubed(array);
+        }
 		// end timer
 		final long end = System.nanoTime();
 
 		// convert nanoseconds to ms and divide by numRuns to get average runtime
 		// for a single function call
-		System.out.println("Runtime: " + (((end - start) / 1000000.0) / numRuns) + "ms");
+		System.out.println((((end - start) ) / numRuns) );
 	}
 }

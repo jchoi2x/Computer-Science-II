@@ -19,7 +19,7 @@ a.out.js.map
 # Libraries
 *.lib
 *.a
-*.class				
+*.class
 
 # Shared objects (inc. Windows DLLs)
 *.dll
