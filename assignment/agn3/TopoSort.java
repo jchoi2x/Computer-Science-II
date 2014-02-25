@@ -47,17 +47,10 @@ public class TopoSort {
 						matrix[j][k] = Integer.parseInt(aLine[k]);
 					}
 				}
-<<<<<<< HEAD
-
-
-
-
-=======
 				
 				
 				
 				
->>>>>>> agn3a
 				// Check aCyclic or Cyclic and run if acyclic
 				if (acyclicTest(matrix)){
 					System.out.printf("TS("+i+",DFS): ");
@@ -80,11 +73,7 @@ public class TopoSort {
 
 	}
 
-<<<<<<< HEAD
-
-=======
 	
->>>>>>> agn3a
 	public Boolean acyclicTest(Integer[][] matrix) {
 		if (matrix.length == 0) {
 			// Acyclic
@@ -105,11 +94,7 @@ public class TopoSort {
 		}
 		int row = 0, col = 0;
 		for (int i = 0; i < matrix.length; i++) {
-<<<<<<< HEAD
-			if (i == target) continue;
-=======
 			if (i == target) continue;	
->>>>>>> agn3a
 			else{
 				for ( int j = 0 ; j < matrix[i].length ; j++ ){
 					if ( j == target ) continue ;
@@ -138,11 +123,7 @@ public class TopoSort {
 		stk.clear();
 		visited.clear();
 		for ( int i = 0 ; i < matrix.length ; i++ )visited.add(false);
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> agn3a
 		// While unvisited vertices exist
 		while ( visited.indexOf(false) != -1 ){
 			for ( int i = 0 ; i < visited.size() ; i++ ){
@@ -151,13 +132,8 @@ public class TopoSort {
 				}
 			}
 		}
-<<<<<<< HEAD
-
-
-=======
 		 
 		
->>>>>>> agn3a
 		while (!stk.isEmpty()) {
 			System.out.printf("%d ", stk.pop());
 		}
@@ -166,38 +142,23 @@ public class TopoSort {
 		// mark v visited
 		visited.set(v, true);
 
-<<<<<<< HEAD
-		// for each vertex w pointed to by v
-=======
 		// for each vertex w pointed to by v  
->>>>>>> agn3a
 		for ( Integer w : getOutgoing(matrix, v) ) {
 			// if w is unvisited then dfs(w)
 			if (!visited.get(w)) {
 				dfs(matrix,w);
 			}
 		}
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> agn3a
 		// push(v) into stack so it can be printed in reverse l8r
 		stk.push(v);
 	}
 
 
-<<<<<<< HEAD
-
-
-	/**
-	 *
-=======
 	
 	
 	/**
 	 * 
->>>>>>> agn3a
 	 * @param matrix
 	 */
 	public void DecAndConquer(Integer[][] matrix){
@@ -205,72 +166,39 @@ public class TopoSort {
         ArrayList<Integer> L = new ArrayList<Integer>();
         // S <- Set of all nodes with no incoming edges
         ArrayList<Integer> S = getNoIncoming(matrix);	// Fill S w. vertices w/o incoming edges
-<<<<<<< HEAD
-
-=======
        
->>>>>>> agn3a
         // while S is nonempty
         while (!S.isEmpty()){
             // remove a node n from S and insert into L
         	Integer n = S.remove(0);
         	L.add(n);
-<<<<<<< HEAD
-
-=======
         	
->>>>>>> agn3a
             // for each node m with an edge from n to m
         	for ( Integer m : getOutgoing(matrix, n)){
         		// remove edge e from the graph
         		matrix[n][m] = 0 ;
-<<<<<<< HEAD
-
-=======
         		
->>>>>>> agn3a
 
                 // if m has no other incoming edges
         		if (getNoIncoming(matrix, m)){
         			// then insert m in S
         			S.add(m);
         		}
-<<<<<<< HEAD
-        	}
-=======
         	}            
->>>>>>> agn3a
         }
 	    // if graph has edges then ERROR
         for ( int i = 0 ; i < matrix.length ; i++ ){
         	if ( getOutgoing(matrix,i).size() != 0 ){
         		System.out.println("\nERROR");
-<<<<<<< HEAD
-        		return ;
-        	}
-        }
-
-=======
         		return ; 
         	}
         }
         
->>>>>>> agn3a
         // Otherwise print L
     	for ( Integer n : L ){
     		System.out.printf("%d ", n);
     	}
     }
-<<<<<<< HEAD
-
-
-
-
-
-	/**
-	 * Returns arraylist containing vertices with no incoming edges
-	 * of the entire matrix. Vertex v has no incoming edges if
-=======
 	
 	
 	
@@ -279,7 +207,6 @@ public class TopoSort {
 	/**
 	 * Returns arraylist containing vertices with no incoming edges 
 	 * of the entire matrix. Vertex v has no incoming edges if 
->>>>>>> agn3a
 	 * column v of adj. matrix is all 0's
 	 * @param matrix
 	 * @return ArrayList containing vertices with no incoming edges
@@ -290,17 +217,10 @@ public class TopoSort {
         for ( int i = 0 ; i < matrix.length ; i++ ){
         	// for each row in column
             for ( int j = 0 ; j < matrix[i].length ; j++){
-<<<<<<< HEAD
-
-                if ( matrix[j][i] == 1 )
-                	break;
-
-=======
             	
                 if ( matrix[j][i] == 1 )
                 	break; 
                 
->>>>>>> agn3a
                 // If at final row j of column i, and the matrix contains a 0, entire column is zero
                 if ( j+1 >= matrix[i].length && matrix[j][i] == 0){
                     rtn.add(i);
@@ -318,27 +238,6 @@ public class TopoSort {
 	public Boolean getNoIncoming(Integer[][] matrix, Integer m){
 		for ( int i = 0 ; i < matrix.length ; i++){
 			if (matrix[i][m] == 1){
-<<<<<<< HEAD
-				return false ;
-			}
-		}
-		return true ;
-	}
-    /**
-     * Finds and returns Arraylist containing all the vertices that m points.
-     * @param matrix
-     * @param m
-     * @return Arraylist containing vertices that m points to
-     */
-	public ArrayList<Integer> getOutgoing(Integer[][] matrix, Integer m){
-		ArrayList<Integer> rtn = new ArrayList<Integer>();
-
-		// Get the first instance of a 1 in the row of m
-		int index = Arrays.asList(matrix[m]).indexOf(1);
-		// If no 1 then return rtn
-		if ( index == -1) return rtn ;
-
-=======
 				return false ; 
 			}
 		}
@@ -358,17 +257,12 @@ public class TopoSort {
 		// If no 1 then return rtn
 		if ( index == -1) return rtn ; 
 		
->>>>>>> agn3a
 		for ( int i = index ; i < matrix.length ; i++ ){
             if ( matrix[m][i] == 1 ){
             	rtn.add(i);
             }
         }
-<<<<<<< HEAD
-		return rtn ;
-=======
 		return rtn ; 
->>>>>>> agn3a
 	}
 
 	public static void main(String[] args) {
@@ -377,8 +271,4 @@ public class TopoSort {
 }
 //45*67  = (4+5)*(6+7)-4*6-5*7
 //       = 9*13-24-35
-<<<<<<< HEAD
 //		 = 117-24-35
-=======
-//		 = 117-24-35
->>>>>>> agn3a
