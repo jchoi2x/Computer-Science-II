@@ -4,82 +4,34 @@
  * Implement Topological sort via DepthFirst Search and Decrease by one */
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
-
 import java.util.Scanner;
 import java.util.Stack;
+
+
+
 
 public class TopoSort {
 	public Stack<Integer> stk;
 	public ArrayList<Boolean> visited ;
+
 	public TopoSort() {
 		stk = new Stack<Integer>();
 		visited = new ArrayList<Boolean>();
 		readMatrix("graphs.txt");
 	}
 
-	public void readMatrix(String filename) {
-		try {
-			Scanner scan = new Scanner(new FileReader(filename)); // Read
 
-			// Get number of graphs in input file
-			int numGraphs = Integer.parseInt(scan.nextLine().split("\\s+")[0]);
-
-			// For each graph
-			for (int i = 0; i < numGraphs; i++) {
-				// read the first two lines containing startVertex and nxn size
-				int n_by_n = Integer.parseInt(scan.nextLine().split("\\s+")[0]);
-
-				// Declare/Instantiate multidimensional integer array to hold
-				// the adjacency matrix values
-				Integer[][] matrix = new Integer[n_by_n][n_by_n];
-
-				// for each line in the given adjacency matrix
-				for (int j = 0; j < n_by_n && scan.hasNextLine(); j++) {
-					// Read line as one long string, and split at whitespace
-					// into an array before assigning to aLine
-					String[] aLine = scan.nextLine().split("\\s+");
-					// Convert each character element in aLine into an integer
-					// and copy into matrix
-					for (int k = 0; k < n_by_n; k++) {
-						matrix[j][k] = Integer.parseInt(aLine[k]);
-					}
-				}
-				
-				
-				
-				
-				// Check aCyclic or Cyclic and run if acyclic
-				if (acyclicTest(matrix)){
-					System.out.printf("TS("+i+",DFS): ");
-					dfsCaller(matrix);
-					System.out.printf("\nTS("+i+",DBO): ");
-					DecAndConquer(matrix);
-					System.out.println();
-				}
-				else{
-					System.out.printf("TS("+i+",DFS): NO TOPOLOGICAL SORT");
-					System.out.printf("\nTS("+i+",DBO): NO TOPOLOGICAL SORT");
-					System.out.println();
-					
-				}
-			}
-			scan.close();
-		} catch (IOException ex) {
-			System.out.println("ERROR IOException");
-		}
-		System.out.println();
-
-	}
-
-
-
+	/**
+	 * Initializes utilities and calls the recursive dfs then prints the 
+	 * results of topological sort when dfs returns.
+	 * @param matrix
+	 */
 	public void dfsCaller(Integer[][] matrix) {
 		stk.clear();
 		visited.clear();
+		
 		for ( int i = 0 ; i < matrix.length ; i++ )visited.add(false);
 		
 		// While unvisited vertices exist
@@ -90,12 +42,17 @@ public class TopoSort {
 				}
 			}
 		}
-		 
-		
+		// Print the contents of the stack containing reversed topological order
 		while (!stk.isEmpty()) {
 			System.out.printf("%d ", stk.pop());
 		}
 	}
+	/**
+	 * Recursive Depthfirst search. Pushes to a stack only so 
+	 * dfsCaller can print in reverse order when dfs returns
+	 * @param matrix
+	 * @param v 				
+	 **/
 	public void dfs (Integer[][] matrix, Integer v){
 		// mark v visited
 		visited.set(v, true);
@@ -112,7 +69,11 @@ public class TopoSort {
 		stk.push(v);
 	}
 
-	
+	/**
+	 * Implements iterative decrease-by-one algorithm to topologically sort
+	 * the given matrix.
+	 * @param matrix
+	 */
 	public void DecAndConquer(Integer[][] matrix){
         // L <- Empty set that will contain sorted elements
         ArrayList<Integer> L = new ArrayList<Integer>();
@@ -154,7 +115,74 @@ public class TopoSort {
 	
 	
 	
+
 	
+	
+	
+	
+	
+	/**
+	 * From input file, reads the number matrixes and for each matrix read,
+	 * performs depth-first search and decrease-by-one search on the matrix
+	 * to find topological ordering.
+	 * @param filename
+	 */
+	public void readMatrix(String filename) {
+		try {
+			Scanner scan = new Scanner(new FileReader(filename)); // Read
+
+			// Get number of graphs in input file
+			int numGraphs = Integer.parseInt(scan.nextLine().split("\\s+")[0]);
+
+			// For each graph
+			for (int i = 0; i < numGraphs; i++) {
+				// read the first two lines containing startVertex and nxn size
+				int n_by_n = Integer.parseInt(scan.nextLine().split("\\s+")[0]);
+
+				// Declare/Instantiate multidimensional integer array to hold
+				// the adjacency matrix values
+				Integer[][] matrix = new Integer[n_by_n][n_by_n];
+
+				// for each next line 
+				for (int j = 0; j < n_by_n && scan.hasNextLine(); j++) {
+					// Read the line as one long string, and split at whitespace
+					// and split into an array before assigning to aLine
+					String[] aLine = scan.nextLine().split("\\s+");
+					// Convert each character element in aLine into an integer
+					// and copy into matrix
+					for (int k = 0; k < n_by_n; k++) {
+						matrix[j][k] = Integer.parseInt(aLine[k]);
+					}
+				}
+				
+				
+				
+				
+				/*
+				 * Execute Depth-First Search and Decrease-by-One methods
+				 */
+				// Check aCyclic or Cyclic and run if acyclic
+				if (acyclicTest(matrix)){
+					System.out.printf("TS("+i+",DFS): ");
+					dfsCaller(matrix);
+					System.out.printf("\nTS("+i+",DBO): ");
+					DecAndConquer(matrix);
+					System.out.println();
+				}
+				else{
+					System.out.printf("TS("+i+",DFS): NO TOPOLOGICAL SORT");
+					System.out.printf("\nTS("+i+",DBO): NO TOPOLOGICAL SORT");
+					System.out.println();
+					
+				}
+			}
+			scan.close();
+		} catch (IOException ex) {
+			System.out.println("ERROR IOException");
+		}
+		System.out.println();
+
+	}
 
 	/**
 	 * Returns arraylist containing vertices with no incoming edges 
@@ -181,6 +209,7 @@ public class TopoSort {
         }
         return rtn ;
     }
+    
     /**
      * (Overloaded method) Returns true if vertex m has no incoming edges. Otherwise false
      * @param matrix
@@ -195,6 +224,7 @@ public class TopoSort {
 		}
 		return true ; 
 	}
+	
     /**
      * Finds and returns Arraylist containing all the vertices that m points. 
      * @param matrix
@@ -216,6 +246,7 @@ public class TopoSort {
         }
 		return rtn ; 
 	}
+	
 	/**
 	 * Tests for acyclicity of matrix by removing a leaf node 
 	 * from given matrix and recursing until either the matrix is complely 
@@ -235,6 +266,7 @@ public class TopoSort {
 			return acyclicTest(removeVertex(matrix, findLeaf(matrix) ));
 		}
 	}
+	
 	/**
 	 * Removes the target row and target column from the given matrix and returns it 
 	 * @param matrix
@@ -264,6 +296,7 @@ public class TopoSort {
 		}
 		return ret;
 	}
+
 	/**
 	 * Finds the first instance of a leaf in the matrix and returns it
 	 * @param matrix
@@ -283,6 +316,3 @@ public class TopoSort {
 		new TopoSort();
 	}
 }
-//45*67  = (4+5)*(6+7)-4*6-5*7
-//       = 9*13-24-35
-//		 = 117-24-35
