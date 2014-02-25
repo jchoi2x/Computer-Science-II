@@ -124,7 +124,8 @@ public class Topological {
 			}
 		}
 		dfsCaller(G);
-        decreaseConquer(matrix,G);
+        DecAndConquer(matrix);
+        System.out.println();
 	}
 
 	public void dfs(Vertex v) {
@@ -171,6 +172,110 @@ public class Topological {
 	}
 
 
+
+
+
+
+
+
+
+
+	public void DecAndConquer(Integer[][] matrix){
+        // L <- Empty set that will contain sorted elements
+        ArrayList<Integer> L = new ArrayList<Integer>();
+        // S <- Set of all nodes with no incoming edges
+        ArrayList<Integer> S = getNoIns(matrix);        // Fill S w. vertices w/o incoming edges
+
+        // while S is nonempty
+        while (!S.isEmpty()){
+            // remove a node n from S and insert into L
+        	Integer n = S.remove(0);
+        	L.add(n);
+            // for each node m with an edge from n to m
+
+        	for ( Integer m : getOuts(matrix, n)){
+        		// remove edge e from the graph
+
+        		matrix[n][m] = 0 ;
+
+        		// printMatrix(matrix);
+                // if m has no other incoming edges
+        		if (hasNoIns(matrix, m) ){
+        			// then insert m in S
+        			S.add(m);
+        		}
+        	}
+
+
+        }
+	    // if graph has edges then ERROR
+        for ( int i = 0 ; i < matrix.length ; i++ ){
+        	if ( getOuts(matrix,i).size() != 0 ){
+        		System.out.println("\nERROR");
+        		return ;
+        	}
+        }
+        System.out.println();
+        System.out.printf("DecAndConquer: ");
+        // Otherwise print L
+    	for ( Integer n : L ){
+    		System.out.printf("%d, ", n);
+    	}
+    	System.out.println();
+
+    }
+	public ArrayList<Integer> getOuts(Integer[][] matrix, Integer m){
+		ArrayList<Integer> rtn = new ArrayList<Integer>();
+		for ( int i = 0 ; i < matrix.length ; i++ ){
+            if ( matrix[m][i] == 1 ){
+            	rtn.add(i);
+            }
+        }
+		return rtn ;
+	}
+	public Boolean hasNoIns(Integer[][] matrix, Integer m){
+		for ( int i = 0 ; i < matrix.length ; i++){
+			if (matrix[i][m] == 1){
+				return false ;
+			}
+		}
+		return true ;
+	}
+    public ArrayList<Integer> getNoIns(Integer[][] matrix){
+        ArrayList<Integer> rtn = new ArrayList<Integer>();
+        for ( int i = 0 ; i < matrix.length ; i++ ){
+            for ( int j = 0 ; j < matrix[i].length ; j++){
+                if ( matrix[j][i] == 1 ){
+                	break;
+                }
+                if ( j+1 >= matrix[i].length && matrix[j][i] == 0){
+                    rtn.add(i);
+                }
+            }
+        }
+        return rtn ;
+    }
+    public void printMatrix(Integer[][] matrix){
+    	for ( int i = 0 ; i < matrix.length ; i++ ){
+    		int j = 0 ;
+    		for ( j = 0 ; j < matrix.length-1 ; j++ ){
+    			System.out.printf("%d, ", matrix[i][j]);
+    		}
+    		System.out.printf("%d", matrix[i][j]);
+    		System.out.println();
+
+    	}
+    	System.out.println();
+		System.out.println();
+    }
+
+
+
+
+
+
+
+
     public void decreaseConquer(Integer[][] matrix, Vertex[] V){
     	//Let Q be a queue.
     	Queue<Vertex> Q = new LinkedList<Vertex>();
@@ -197,8 +302,8 @@ public class Topological {
     		Arrays.fill(matrix[v.getName()],0);
 
 			//Enqueue any adjacent vertices of v (in increasing order) without incoming edges.
-    		Integer[] adjs = getAdjs(matrix, v.getName());
-    		for ( Integer vv : adjs ){
+
+    		for ( Integer vv : getIns(matrix, v.getName()) ){
 				Q.offer(V[vv]);
     		}
     	}
@@ -210,17 +315,17 @@ public class Topological {
     		System.out.printf("%d, ",toptop);
     	}
     }
-    public Integer[] getAdjs(Integer[][] matrix, int v ){
-        int inCnt = 0 ;
-        Integer[] adjs = new Integer[matrix.length];
+    public ArrayList<Integer> getIns(Integer[][] matrix, int v ){
+
+        ArrayList<Integer> rtn = new ArrayList<Integer>();
+
         for ( int j = 0 ; j < matrix[v].length ; j++){
             if ( matrix[j][v] == 1 ){
-            	adjs[inCnt++] =  j;
+            	rtn.add(j);
             }
         }
-        Integer[] ret = new Integer[inCnt];
-        System.arraycopy(adjs, 0, ret, 0, inCnt);
-        return ret;
+
+        return rtn;
     }
     public int inDegree( Integer[][] matrix, int v ){
         int inCnt = 0 ;
@@ -243,3 +348,4 @@ public class Topological {
 
 	}
 }
+
