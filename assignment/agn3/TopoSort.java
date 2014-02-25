@@ -1,6 +1,7 @@
 /* Name:    James Choi
  * Course:  Computer Science II
- * Assignment #3				*/
+ * Assignment #3 - Topological Sort  
+ * Implement Topological sort via DepthFirst Search and Decrease by one */
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -63,6 +64,7 @@ public class TopoSort {
 					System.out.printf("TS("+i+",DFS): NO TOPOLOGICAL SORT");
 					System.out.printf("\nTS("+i+",DBO): NO TOPOLOGICAL SORT");
 					System.out.println();
+					
 				}
 			}
 			scan.close();
@@ -73,50 +75,6 @@ public class TopoSort {
 
 	}
 
-	
-	public Boolean acyclicTest(Integer[][] matrix) {
-		if (matrix.length == 0) {
-			// Acyclic
-			return true;
-		} else if (findLeaf(matrix) == -1) {
-			// Cyclic
-			return false;
-		} else {
-			// Recurse
-			return acyclicTest(removeVertex(matrix, findLeaf(matrix) ));
-		}
-	}
-	public Integer[][] removeVertex(Integer[][] matrix, int target) {
-		Integer[][] ret = new Integer[matrix.length - 1][matrix.length - 1];
-
-		if (matrix.length == 1 && matrix[0][0] == 0) {
-			return new Integer[0][0];
-		}
-		int row = 0, col = 0;
-		for (int i = 0; i < matrix.length; i++) {
-			if (i == target) continue;	
-			else{
-				for ( int j = 0 ; j < matrix[i].length ; j++ ){
-					if ( j == target ) continue ;
-					else{
-						ret[row][col] = matrix[i][j];
-						col++ ;
-					}
-				}
-				col = 0 ;
-				row++;
-			}
-		}
-		return ret;
-	}
-	public int findLeaf(Integer[][] matrix) {
-		for ( int i = 0 ; i < matrix.length ; i++ ){
-			if ( Arrays.asList(matrix[i]).indexOf(1) == -1 ){
-				return i ;
-			}
-		}
-		return -1 ;
-	}
 
 
 	public void dfsCaller(Integer[][] matrix) {
@@ -154,13 +112,7 @@ public class TopoSort {
 		stk.push(v);
 	}
 
-
 	
-	
-	/**
-	 * 
-	 * @param matrix
-	 */
 	public void DecAndConquer(Integer[][] matrix){
         // L <- Empty set that will contain sorted elements
         ArrayList<Integer> L = new ArrayList<Integer>();
@@ -203,7 +155,7 @@ public class TopoSort {
 	
 	
 	
-	
+
 	/**
 	 * Returns arraylist containing vertices with no incoming edges 
 	 * of the entire matrix. Vertex v has no incoming edges if 
@@ -221,7 +173,7 @@ public class TopoSort {
                 if ( matrix[j][i] == 1 )
                 	break; 
                 
-                // If at final row j of column i, and the matrix contains a 0, entire column is zero
+                // If at final row j of column i, and matrix contains a 0 add it
                 if ( j+1 >= matrix[i].length && matrix[j][i] == 0){
                     rtn.add(i);
                 }
@@ -264,6 +216,68 @@ public class TopoSort {
         }
 		return rtn ; 
 	}
+	/**
+	 * Tests for acyclicity of matrix by removing a leaf node 
+	 * from given matrix and recursing until either the matrix is complely 
+	 * empty (acyclic) or there are no leaves in the matrix (cyclic) 
+	 * @param matrix
+	 * @return True if matrix is acyclic and false otherwise 
+	 */
+	public Boolean acyclicTest(Integer[][] matrix) {
+		if (matrix.length == 0) {
+			// Acyclic
+			return true;
+		} else if (findLeaf(matrix) == -1) {
+			// Cyclic
+			return false;
+		} else {
+			// Recurse
+			return acyclicTest(removeVertex(matrix, findLeaf(matrix) ));
+		}
+	}
+	/**
+	 * Removes the target row and target column from the given matrix and returns it 
+	 * @param matrix
+	 * @param target
+	 * @return Modified version of argument matrix, with row target and column target removed
+	 */
+	public Integer[][] removeVertex(Integer[][] matrix, int target) {
+		Integer[][] ret = new Integer[matrix.length - 1][matrix.length - 1];
+
+		if (matrix.length == 1 && matrix[0][0] == 0) {
+			return new Integer[0][0];
+		}
+		int row = 0, col = 0;
+		for (int i = 0; i < matrix.length; i++) {
+			if (i == target) continue;	
+			else{
+				for ( int j = 0 ; j < matrix[i].length ; j++ ){
+					if ( j == target ) continue ;
+					else{
+						ret[row][col] = matrix[i][j];
+						col++ ;
+					}
+				}
+				col = 0 ;
+				row++;
+			}
+		}
+		return ret;
+	}
+	/**
+	 * Finds the first instance of a leaf in the matrix and returns it
+	 * @param matrix
+	 * @return Index of a leaf in the given argument
+	 */
+	public int findLeaf(Integer[][] matrix) {
+		for ( int i = 0 ; i < matrix.length ; i++ ){
+			if ( Arrays.asList(matrix[i]).indexOf(1) == -1 ){
+				return i ;
+			}
+		}
+		return -1 ;
+	}
+
 
 	public static void main(String[] args) {
 		new TopoSort();
