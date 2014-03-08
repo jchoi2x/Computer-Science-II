@@ -12,25 +12,40 @@ Thumbs.db
 a.out.dSYM
 a.out.js
 a.out.js.map
+
 # Object files
 *.o
 *.ko
 *.h.gch
+.o
+.ko
+.h.gch
+
 # Libraries
 *.lib
 *.a
 *.class
+.lib
+.a
+.class
 
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
 *.so.*
 *.dylib
+.dll
+.so
+.so.*
+.dylib
 
 # Executables
 *.exe
 *.out
 *.app
+.exe
+.out
+.app
 
 
 Computer-Science-I.config
