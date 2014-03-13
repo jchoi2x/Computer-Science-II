@@ -1,108 +1,217 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays ;
+import java.util.Scanner;
 
 public class Binary{
-    private char[] binary1 ;
-    private char[] binary2 ;
-
-    public Binary(char[] bin1, char[] bin2 ){
-        this.binary1 = reverse(bin1) ;
-        this.binary2 = reverse(bin2) ;
-        signExt();
-        print();
-
-
-        System.out.println();
-        print(reverse(binary1));
-        print(reverse(binary2));
-        System.out.println("--+-------------");
-        print((binAdd()));
-    }
-
-    public char[] reverse(char[] bin){
-        int len = bin.length-1 ;
-        char[] newBin = new char[bin.length ];
-
-        for ( int i = 0 ; i < len/2 ; i++ ){
-            char tmp = bin[i];
-            bin[i] = bin[len-i];
-            bin[len-i] = tmp ;
+    private char[] bin1;
+    private char[] bin2;
+    public Binary(String s1, String s2){
+        this.bin1 = s1.toCharArray();
+        this.bin2 = s2.toCharArray();
+        if ( bin1.length != bin2.length ){
+            if (bin1.length > bin2.length ){
+                bin2 = extend(bin2, bin1.length);
+            }
+            else{
+                bin1 = extend(bin1, bin2.length );
+            }
         }
-        return bin ;
+    }
+    public Binary(char[] s1, char[] s2){
+        this.bin1 = s1;
+        this.bin2 = s2;
+        if ( bin1.length != bin2.length ){
+            if (bin1.length > bin2.length ){
+                bin2 = extend(bin2, bin1.length-bin2.length);
+            }
+            else{
+                bin1 = extend(bin1, bin2.length-bin1.length );
+            }
+        }
     }
 
-    public char[] binAdd(){
-        char[] newBin = new char[binary1.length+1];
-        Arrays.fill(newBin,'0');
+    public char[] multiply(char[] a, char[] b){
+        char[] prod = new char[a.length+b.length];
+        char[] sum = new char[a.length+b.length];
+        Arrays.fill(prod,'0');
+        Arrays.fill(sum,'0');
+        for ( int i = 0 ; i < b.length; i++ ){
+            if ( b[i] == '1' ){
+                sum = add(shiftL(a,i),extend(sum,sum.length+i));
+            }
+        }
+        return prod ;
+    }
+    public char[] multiply(){
+        char[] prod = new char[bin1.length+bin2.length];
+        char[] sum = new char[bin1.length+bin2.length];
+        Arrays.fill(prod,'0');
+        Arrays.fill(sum,'0');
+        for ( int i = 0 ; i < bin2.length; i++ ){
+            char[] nAdd = shiftL(bin1,i);
+            //print(nAdd,bin2[i]+" n2Add: ");
 
+            if ( bin2[i] == '1' ){
+                print(nAdd,"\nAdd: ");
+                print(sum,"TO: ");
+                sum = add(nAdd,sum);
+                print(sum,"=: ");
+            }
+        }
+        print(sum, "sum: ");
+        return prod ;
+    }
+
+    public char[] extend(char[] ch, int n){
+        if ( n <= 0 ){
+            return ch ;
+        }
+        else{
+            char[] nn = new char[ch.length+n];
+            Arrays.fill(nn,'0');
+            System.arraycopy(ch, 0, nn, 0, ch.length);
+
+            return nn ;
+        }
+    }
+    public char[] shiftL(char[] ch, int n){
+        if ( n <= 0 ){
+            return ch ;
+        }
+        else{
+            char[] nn= new char[n+ch.length];
+            Arrays.fill(nn,'0');
+            System.arraycopy(ch, 0, nn, n, ch.length);
+            return nn ;
+        }
+    }
+
+    public char[] add(){
+        char[] sol = new char[bin1.length];
         char carry = '0';
-        for ( int i = 0 ; i < binary1.length ; i++ ){
-            // Calculate Bit result
-            newBin[i] = (char) ((binary1[i]-'0') ^ (binary2[i]-'0') + '0');
-            newBin[i] = (char) ((newBin[i]-'0') ^ (carry-'0') + '0');
-
-            // Calculate if there is a carry, Carry = AB + AC + BC
-            if ( (binary1[i]-'0' & binary2[i]-'0') == 1 || (binary2[i]-'0' & carry-'0') == 1 || (binary1[i]-'0' & carry-'0') == 1 ){
-                carry = '1';
-            }
-            else{
-                carry = '0' ;
-            }
-
-            if ( i+1 == binary1.length && carry == '1'){
-                newBin[binary1.length] = carry ;
-            }
-            else{
-                char[] newnew = new char[binary1.length];
-                System.arraycopy(newBin,0,newnew,0,newBin.length-1);
-                System.arraycopy(newnew,0,newBin,0,newnew.length);
-            }
+        for ( int i = 0 ; i < bin1.length; i++ ){
+            sol[i] = xor(xor(bin1[i],bin2[i]),carry);
+            carry = or(and(bin1[i],bin2[i]), and(carry,xor(bin1[i],bin2[i])));
         }
-        return newBin ;
-    }
-
-    private void signExt(){
-        if ( this.binary1.length > this.binary2.length ){
-            char[] newBin = new char[this.binary1.length];
-            Arrays.fill(newBin,'0');
-
-            System.arraycopy(binary2,0,newBin,0,binary2.length);
-            this.binary2 = newBin ;
-            return ;
+        if ( carry == '1' ){
+            char[] ch = new char[bin1.length+1];
+            Arrays.fill(ch, '0');
+            System.arraycopy(sol, 0, ch, 0, sol.length);
+            ch[ch.length-1] = carry ;
+            sol = ch ;
         }
-        else if ( this.binary1.length < this.binary2.length ){
-            char[] newBin = new char[this.binary2.length];
-            Arrays.fill(newBin,'0');
 
-            int destPos = binary2.length - binary1.length ;
-            System.arraycopy(binary1,0,newBin,0,binary1.length);
-            this.binary1 = newBin ;
-            return ;
+        return sol ;
+    }
+
+    public char[] add(char[] a, char[] b){
+        if ( a.length > b.length ){
+            b = extend(b,a.length-b.length);
         }
-        else return ;
+        else{
+            a = extend(a,b.length-a.length);
+        }
+        char[] sol = new char[a.length];
+        char carry = '0';
+        for ( int i = 0 ; i < a.length; i++ ){
+            sol[i] = xor(xor(a[i],b[i]),carry);
+            carry = or(and(a[i],b[i]), and(carry,xor(a[i],b[i])));
+        }
+        if ( carry == '1' ){
+            char[] ch = new char[a.length+1];
+            Arrays.fill(ch, '0');
+            System.arraycopy(sol, 0, ch, 0, sol.length);
+            ch[ch.length-1] = carry ;
+            sol = ch ;
+        }
+
+        return sol ;
     }
 
-    public void print(){
-        String str = "" ;
-        for ( int i = 0 ; i < binary1.length ; i++ ) str+=binary1[i];
-        System.out.println("Binary1: "+str);
-        str = "" ;
-        for ( int i = 0 ; i < binary2.length ; i++ ) str+=binary2[i];
-        System.out.println("Binary2: "+str);
+
+    public char and(char a, char b){
+        if ( a == '1' && b == '1') return '1';
+        else return '0';
     }
-    public void print(int n){
-        for ( char c : this.binary1 ) System.out.printf("Binary1: %d",(c-'0'));
-        System.out.println();
-        for ( char c : this.binary2 ) System.out.printf("Binary2: %d",(c-'0'));
-        System.out.println();
+    public char or(char a, char b){
+        if ( a == '1' || b =='1') return '1';
+        else return '0';
     }
-    public void print(char[] ch){
-        for ( int i = 0 ; i < ch.length ; i++ ) System.out.printf("%d",(ch[i]-'0'));
-        System.out.println();
+    public char xor(char a, char b){
+        if ( a != b ) return '1';
+        else return '0';
+    }
+    public void print(char[] str, String msg){
+        System.out.print("\n"+msg);
+        for ( int i = str.length-1 ; i > -1 ; i-- ){
+            System.out.printf("%c",str[i]);
+        }
+    }
+    public void print(int in){
+        if ( in == 0 ){
+            System.out.print("\nBinary 1: ");
+            for ( int i = bin1.length-1 ; i > -1 ; i-- ){
+                System.out.printf("%c",bin1[i]);
+            }
+            System.out.println();
+        }
+        else{
+            System.out.print("\nBinary 2: ");
+            for ( int i = bin2.length-1 ; i > -1 ; i-- ){
+                System.out.printf("%c",bin2[i]);
+            }
+
+        }
+    }
+    public static char[] reverse(char[] ch){
+        for ( int i = ch.length-1 ; i > -1 ; i-- ){
+            char tmp = ch[ch.length-i-1];
+            ch[ch.length-i-1] = ch[i];
+            ch[i] = tmp ;
+        }
+        return ch ;
     }
 
+
+
+
+    public static void readIn(String filename){
+        int i, j;
+        int numMult, numLength1, numLength2;
+        String num1, num2;
+
+        File textFile = new File(filename);
+
+        try{
+            Scanner in = new Scanner(textFile);
+            numMult = Integer.parseInt(in.nextLine().split("\\s+")[0]);
+            int curProb = 0 ;
+            while (in.hasNextLine() & curProb < numMult){
+
+                for (i = 0; i < numMult; i++){
+                    String str1 = in.nextLine().split("\\s+")[1];
+                    String str2 = in.nextLine().split("\\s+")[1];
+
+                    Binary b = new Binary(str1.toCharArray(),str2.toCharArray());
+                    b.print(0);
+                    b.print(1);
+                    b.print(b.add(),"Sol: ");
+                    //b.print(b.multiply(),"Sol:");
+                    b.multiply();
+
+                    curProb++ ;
+                }
+            }
+        }catch(FileNotFoundException ex){
+            System.out.println("File Not found");
+        }
+
+    }
     public static void main(String[] args){
-        char[] b1 = {'0','0','1','0','1'};
-        char[] b2 = {'0','0','0','0','0','0','0','0','0','0','1','1','1','1','1','1','1'};
-        Binary binbin = new Binary(b2,b1);
+
+        readIn("infile.txt");
+
     }
 }
