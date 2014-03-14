@@ -8,8 +8,10 @@ public class Binary{
     private char[] bin1; 
     private char[] bin2;
     public Binary(String s1, String s2){
+    	
     	this.bin1 = s1.toCharArray();
     	this.bin2 = s2.toCharArray();
+    	reverse();
     	if ( bin1.length != bin2.length ){
     		if (bin1.length > bin2.length ){
     			bin2 = extend(bin2, bin1.length);
@@ -22,6 +24,7 @@ public class Binary{
     public Binary(char[] s1, char[] s2){
     	this.bin1 = s1; 
     	this.bin2 = s2;
+    	reverse();
     	if ( bin1.length != bin2.length ){
     		if (bin1.length > bin2.length ){
     			bin2 = extend(bin2, bin1.length-bin2.length);
@@ -42,7 +45,7 @@ public class Binary{
     			sum = add(shiftL(a,i),extend(sum,sum.length+i));
     		}
     	}
-    	return prod ;
+    	return sum ;
     }
     public char[] multiply(){
     	char[] prod = new char[bin1.length+bin2.length];
@@ -54,14 +57,11 @@ public class Binary{
     		//print(nAdd,bin2[i]+" n2Add: ");
     		
     		if ( bin2[i] == '1' ){
-    			print(nAdd,"\nAdd: ");
-    			print(sum,"TO: ");
 				sum = add(nAdd,sum);
-				print(sum,"=: ");
     		}
     	}
-    	print(sum, "sum: ");
-    	return prod ;
+    	
+    	return sum;
     }
 	
     public char[] extend(char[] ch, int n){
@@ -76,6 +76,20 @@ public class Binary{
     		return nn ; 
     	}
     }
+	public void reverse(){
+		char[] ch = new char[bin1.length] ; 
+		for ( int i = 0 ; i < bin1.length/2 ; i++ ){
+			ch[i] = bin1[bin1.length-i-1];
+			ch[bin1.length-i-1] = bin1[i] ; 
+		}
+		this.bin1 = ch ;
+		char[] dh = new char[bin2.length] ;
+		for ( int i = 0 ; i < bin2.length/2 ; i++ ){
+			dh[i] = bin2[bin2.length-i-1];
+			dh[bin2.length-i-1] = bin2[i] ; 
+		}
+		this.bin2 = dh ; 
+	}
     public char[] shiftL(char[] ch, int n){
     	if ( n <= 0 ){
     		return ch ; 
@@ -182,7 +196,12 @@ public class Binary{
     	}
     	return ch ; 
     }
-    
+    public char[] getBin(int i){
+    	if ( i == 0 ){
+    		return bin1; 
+    	}
+    	else return bin2 ; 
+    }
     
     
     
@@ -204,11 +223,11 @@ public class Binary{
 					String str2 = in.nextLine().split("\\s+")[1];
 
 					Binary b = new Binary(reverse(str1.toCharArray()),(str2.toCharArray()));
-					b.print(0);
-			    	b.print(1);
-			    	b.print(b.add(),"Sol: ");
-			    	//b.print(b.multiply(),"Sol:");
-			    	b.multiply();
+					//b.print(0);
+			    	//b.print(1);
+			    	//b.print(b.add(),"Sol: ");
+					b.print(b.stripLead(b.multiply()),"");
+			    	b.print(b.stripLead(b.karatsuba(b.getBin(0), b.getBin(1))),"");
 			    	
 			    	curProb++ ;
 				}
@@ -218,6 +237,76 @@ public class Binary{
 		}
 		
 	}
+    public char[] stripLead(char[] a){
+    	int i = a.length-1 ; 
+    	while ( a[i] != '1' ){
+    		i--;
+    	}
+    	i++ ; 
+    	char[] rtn = new char[i];
+    	System.arraycopy(a, 0, rtn, 0, i);
+    	return rtn ; 
+    }
+    public char[] invert(char[] a){
+    	char[] rtn = new char[a.length];
+    	for ( int i = 0 ; i < a.length ; i++ ){
+    		if (a[i] == '0'){
+    			rtn[i] = '1';
+    		}
+    		else rtn[i] = '0';
+    	}
+    	return rtn ; 
+    }
+    public char[] twosComp (char[] a){
+    	char[] mask = new char[a.length];
+    	Arrays.fill(mask,'0');
+    	mask[0] = '1';
+    	mask = add (a,mask);
+    	
+    	System.arraycopy(mask, 0, mask, 0, a.length);
+    	return mask;
+    }
+    public char[] sub(char[] a, char[] b ){
+    	return add(a,twosComp(b));
+    }
+    public char[] karatsuba(char[] a, char[] b){
+    	int max = max(a,b);
+    	if ( a.length <= max || b.length <= max ){
+    		return multiply(a,b);
+    	}
+    	int m = max(a,b);
+    	m = m/2; 
+    	
+    	char[] high1 = splitAt(a, m);
+    	char[] low1 = splitAt(a,m,a.length);
+    	char[] high2 = splitAt(b, m);
+    	char[] low2 = splitAt(b,m,b.length);
+    	char[] z0 = karatsuba(low1,low2);
+		char[] z1 = karatsuba(add(high1,high2), add(low1,low2));
+    	char[] z2 = karatsuba(high1, high2);
+    	
+    	return add( shiftL(z2,2*m), add(sub(z1,add(z1,z2)),z0));
+    }
+    public char[] splitAt(char[] a, int n){
+    	char[] s = new char[n];
+    	System.arraycopy(a, 0, s, 0, n);
+    	return s ; 
+    }
+    public char[] splitAt(char[] a, int n, int k){
+    	char[] s = new char[a.length-n];
+    	System.arraycopy(a, n, s, 0, a.length-n);
+    	return s; 
+    }
+    
+    public int max( char[] a, char[] b ){
+    	if ( a.length > b.length ){
+    		return a.length ;
+    	}
+    	else{
+    		return b.length; 
+    	}
+    }
+    
     public static void main(String[] args){
     	
     	readIn("infile.txt");
