@@ -14,6 +14,19 @@ public class Binary {
         this.bin1 = bin1 ;
         this.bin2 = bin2 ;
     }
+    // 
+    public char xor(char a, char b){
+        if ( a != b ) return '1' ;
+        else return '0' ;
+    }
+    public char and(char a, char b){
+        if ( a == '1' && b == '1') return '1' ;
+        else return '0';
+    }
+    public char or(char a, char b){
+        if ( a == '1' || b == '1') return '1' ;
+        else return '0';
+    }
 
     public String equalize(String str, int length ){
         if ( str.length() >= length) return str ;
@@ -32,6 +45,8 @@ public class Binary {
         // make the lengths same before adding
         first = equalize(first, second.length());
         second = equalize(second,first.length());
+        
+        
         int length = first.length() > second.length() ? first.length(): second.length() ;
         char carry = '0';  // Initialize carry
 
@@ -50,20 +65,18 @@ public class Binary {
         return result;
     }
 
-    public char xor(char a, char b){
-        if ( a != b ) return '1' ;
-        else return '0' ;
-    }
-    public char and(char a, char b){
-        if ( a == '1' && b == '1') return '1' ;
-        else return '0';
-    }
-    public char or(char a, char b){
-        if ( a == '1' || b == '1') return '1' ;
-        else return '0';
-    }
 
-
+    public String subtract (String s1, String s2){
+    	
+    	
+    	String t = new String(addBitStrings(s1,addBitStrings("1",invert(s2))).substring(1));
+    	
+    	System.out.println(t);
+    	return t; 
+    }
+    
+    //00001101 -> 11110010 -> 11110011
+    
     public String karatsuba(String a, String b){
 
         int max = a.length() > b.length() ? a.length() : b.length() ;
@@ -87,8 +100,7 @@ public class Binary {
         String z1 = karatsuba(addBitStrings(high1,high2), addBitStrings(low1,low2));
         String z2 = karatsuba(high1, high2);
 
-        return z2;
-        //return add( shiftL(z2,2*m), add( shiftL(sub(z1,addBitStrings(z2,z0)),m),z0));
+    	return addBitStrings( shiftL(z2,2*m), addBitStrings( shiftL(subtract(z1,addBitStrings(z2,z0)),m),z0));
     }
 
 
@@ -104,15 +116,16 @@ public class Binary {
         }
         return new String(String.valueOf(rtn));
     }
-    public String twosComp( String str ){
-
-        char[] ch = invert(str).toCharArray();
+    
+    public String twosComp( String bin ){
+    	String s = new String(bin);
+    	
+        char[] ch = invert(s).toCharArray();
+        
         char[] mask = new char[ch.length];
         Arrays.fill(mask,'0');
         mask[mask.length-1] = '1';
-        String s = addBitStrings(str,String.valueOf(mask));
-        if ( s.length() > str.length() ) System.arraycopy(s, 0, s, 0, str.length());
-        return s ; 
+        return new String(addBitStrings(bin,String.valueOf(mask)));        
     }
     public String multiply(String str1, String str2){
         String result = new String();
@@ -128,10 +141,11 @@ public class Binary {
 
     public String shiftL(String str, int n){
         String add = new String(str);
+        
         for ( int i = 0 ; i < n ; i++ ) add = add.concat("0");
         return new String(add) ;
     }
-
+    
     public String get(int i){
         if ( i == 0 ) return this.bin1 ;
         else return this.bin2 ;
@@ -147,21 +161,24 @@ public class Binary {
             numMult = Integer.parseInt(in.nextLine().split("\\s+")[0]);
             int curProb = 0 ;
             while (in.hasNextLine() & curProb < numMult){
-
                 String str1 = in.nextLine().split("\\s+")[1];
                 String str2 = in.nextLine().split("\\s+")[1];
 
                 Binary b = new Binary(str1,str2);
-                System.out.println("STR1: "+b.equalize(str1,str2.length()));
-                System.out.println("STR2: "+str2);
-                System.out.println("Sum : "+b.addBitStrings(b.get(0), b.get(1)));
-                System.out.println("Mult  : "+b.multiply(b.get(0), b.get(1)));
-                System.out.println("INV: "+b.twosComp("010111"));
-                System.out.println("twoscomp: "+b.addBitStrings(b.invert("010101"),"1"));
+//                System.out.println("STR1: "+b.equalize(str1,str2.length()));
+//                System.out.println("STR2: "+str2);
+//                System.out.println("Sum : "+b.addBitStrings(b.get(0), b.get(1)));
+//                
+//                System.out.println("INV : "+b.invert(b.get(1)));
+//                System.out.println("Comp: "+b.addBitStrings("1",b.invert(b.get(1))));
+//                System.out.println("Sub: "+b.subtract("0010001", "001101"));
+//                
+//                System.out.println("two: "+b.subtract(b.get(0), b.get(1)));
+                System.out.println("   Mult  : "+b.multiply(b.get(0), b.get(1)));
+                System.out.println("Karatsuba: "+b.karatsuba(b.get(0), b.get(1)));
                 
-                curProb++ ;
-
             }
+            
         }catch(FileNotFoundException ex){
             System.out.println("File Not found");
         }
