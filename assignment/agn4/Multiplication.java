@@ -1,20 +1,22 @@
-package assignment4b;
-
-
-
+/**
+ * Name: James choi
+ * Course: Computer-Science II
+ * Assignment #4            */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Binary {
+public class Multiplication{
     private String bin1 ;
     private String bin2 ;
-    public Binary(String bin1, String bin2) {
+    public Multiplication (String bin1, String bin2) {
         this.bin1 = bin1 ;
         this.bin2 = bin2 ;
     }
-    // 
+    /**
+     * Logic functions
+     */
     public char xor(char a, char b){
         if ( a != b ) return '1' ;
         else return '0' ;
@@ -28,6 +30,31 @@ public class Binary {
         else return '0';
     }
 
+    /*
+     * Inverts and shifts
+     */
+    public String invert(String str){
+        String ss = new String(str);
+        char[] rtn = new char[str.length()];
+        for ( int i = 0 ; i < rtn.length ; i++ ){
+            if ( str.charAt(i) == '1'){
+                rtn[i] = '0'  ;
+            }
+            else rtn[i] = '1';
+        }
+        return new String(String.valueOf(rtn));
+    }
+    public String twosComp( String bin ){
+        String s = new String(bin);
+        char[] ch = invert(s).toCharArray();
+        char[] mask = new char[ch.length];
+        Arrays.fill(mask,'0');
+        mask[mask.length-1] = '1';
+        return addBitStrings(bin,String.valueOf(mask));
+    }
+    /**
+     * Make str equal the length if its length < less than
+     */
     public String equalize(String str, int length ){
         if ( str.length() >= length) return str ;
         else{
@@ -38,55 +65,34 @@ public class Binary {
         }
         return new String(str) ;
     }
-    // Add
+    /**
+     * Arithmetic operations
+     */
     public String addBitStrings( String first, String second ){
         String result = new String();  // To store the sum bits
 
-        // make the lengths same before adding
         first = equalize(first, second.length());
         second = equalize(second,first.length());
-        
-        
+
         int length = first.length() > second.length() ? first.length(): second.length() ;
         char carry = '0';  // Initialize carry
-
-        // Add all bits one by one
         for (int i = length-1 ; i >= 0 ; i--){
-            // boolean expression for sum of 3 bits
             char sum = xor(xor(first.charAt(i),second.charAt(i)),carry);
-
             result = String.valueOf(sum+result);
-
-            // boolean expression for 3-bit addition
             carry = or(or(and(first.charAt(i),second.charAt(i)),and(second.charAt(i),carry)), and(first.charAt(i),carry));
         }
         // if overflow, then add a leading 1
         if (carry == '1')  result = new String('1' + result);
-        return result;
+        return new String(result);
     }
-
-
     public String subtract (String s1, String s2){
-    	
-    	
-    	String t = new String(addBitStrings(s1,addBitStrings("1",invert(s2))).substring(1));
-    	
-    	System.out.println(t);
-    	return t; 
+        return new String(addBitStrings(s1,addBitStrings("1",invert(s2))).substring(1));
     }
-    
-    //00001101 -> 11110010 -> 11110011
-    
     public String karatsuba(String a, String b){
-
         int max = a.length() > b.length() ? a.length() : b.length() ;
-
-        // alskdjflskjdflskjdf
         if ( a.length() <= max || b.length() <= max ){
             return multiply(a,b);
         }
-        // asdlfkjasldkjf
-
         int m = a.length() > b.length() ? a.length() : b.length() ;
         m = m/2;
 
@@ -100,37 +106,13 @@ public class Binary {
         String z1 = karatsuba(addBitStrings(high1,high2), addBitStrings(low1,low2));
         String z2 = karatsuba(high1, high2);
 
-    	return addBitStrings( shiftL(z2,2*m), addBitStrings( shiftL(subtract(z1,addBitStrings(z2,z0)),m),z0));
-    }
-
-
-    public String invert(String str){
-        
-        String ss = new String(str);
-        char[] rtn = new char[str.length()];
-        for ( int i = 0 ; i < rtn.length ; i++ ){
-            if ( str.charAt(i) == '1'){
-                rtn[i] = '0'  ;
-            }
-            else rtn[i] = '1';
-        }
-        return new String(String.valueOf(rtn));
-    }
-    
-    public String twosComp( String bin ){
-    	String s = new String(bin);
-    	
-        char[] ch = invert(s).toCharArray();
-        
-        char[] mask = new char[ch.length];
-        Arrays.fill(mask,'0');
-        mask[mask.length-1] = '1';
-        return new String(addBitStrings(bin,String.valueOf(mask)));        
+        return addBitStrings( shiftL(z2,2*m), addBitStrings( shiftL(subtract(z1,addBitStrings(z2,z0)),m),z0));
     }
     public String multiply(String str1, String str2){
         String result = new String();
         int j = 0 ;
         for ( int i = str2.length()-1 ; i > -1 ; i-- ){
+            // If encountered a 1, then shift i amount of times and add to sum
             if ( str2.charAt(i) == '1' ){
                 result = addBitStrings(shiftL(str1,str2.length()-i-1),result);
             }
@@ -141,11 +123,11 @@ public class Binary {
 
     public String shiftL(String str, int n){
         String add = new String(str);
-        
+
         for ( int i = 0 ; i < n ; i++ ) add = add.concat("0");
         return new String(add) ;
     }
-    
+
     public String get(int i){
         if ( i == 0 ) return this.bin1 ;
         else return this.bin2 ;
@@ -153,9 +135,7 @@ public class Binary {
 
     public static void readIn(String filename){
         int numMult;
-
         File textFile = new File(filename);
-
         try{
             Scanner in = new Scanner(textFile);
             numMult = Integer.parseInt(in.nextLine().split("\\s+")[0]);
@@ -164,25 +144,15 @@ public class Binary {
                 String str1 = in.nextLine().split("\\s+")[1];
                 String str2 = in.nextLine().split("\\s+")[1];
 
-                Binary b = new Binary(str1,str2);
-//                System.out.println("STR1: "+b.equalize(str1,str2.length()));
-//                System.out.println("STR2: "+str2);
-//                System.out.println("Sum : "+b.addBitStrings(b.get(0), b.get(1)));
-//                
-//                System.out.println("INV : "+b.invert(b.get(1)));
-//                System.out.println("Comp: "+b.addBitStrings("1",b.invert(b.get(1))));
-//                System.out.println("Sub: "+b.subtract("0010001", "001101"));
-//                
-//                System.out.println("two: "+b.subtract(b.get(0), b.get(1)));
-                System.out.println("   Mult  : "+b.multiply(b.get(0), b.get(1)));
-                System.out.println("Karatsuba: "+b.karatsuba(b.get(0), b.get(1)));
-                
+                Multiplication b = new Multiplication(str1,str2);
+                //System.out.println(b.multiply(b.get(0), b.get(1)));
+                //System.out.println(b.karatsuba(b.get(0), b.get(1)));
+                System.out.println(b.twosComp(b.get(0)));
+                System.out.println(b.twosComp(b.get(1)));
             }
-            
         }catch(FileNotFoundException ex){
             System.out.println("File Not found");
         }
-
     }
     public static void main(String[] args){
         readIn("infile.txt");
