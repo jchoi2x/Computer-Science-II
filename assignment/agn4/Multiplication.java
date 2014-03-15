@@ -50,7 +50,7 @@ public class Multiplication{
         char[] mask = new char[ch.length];
         Arrays.fill(mask,'0');
         mask[mask.length-1] = '1';
-        return addBitStrings(bin,String.valueOf(mask));
+        return new String(addBitStrings(bin,String.valueOf(mask)));
     }
     /**
      * Make str equal the length if its length < less than
@@ -145,17 +145,14 @@ public class Multiplication{
                 String str2 = in.nextLine().split("\\s+")[1];
 
                 Multiplication b = new Multiplication(str1,str2);
-                //System.out.println(b.multiply(b.get(0), b.get(1)));
-                //System.out.println(b.karatsuba(b.get(0), b.get(1)));
-                System.out.println(b.twosComp(b.get(0)));
-                System.out.println(b.twosComp(b.get(1)));
+                System.out.println(b.multiply(b.get(0), b.get(1)));
+                System.out.println(b.karatsuba(b.get(0), b.get(1)));
             }
         }catch(FileNotFoundException ex){
             System.out.println("File Not found");
         }
     }
     public static void main(String[] args){
-        readIn("infile.txt");
+        readIn("mult.txt");
     }
-
 }
