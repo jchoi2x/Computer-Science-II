@@ -1,7 +1,3 @@
-// Arup Guha
-// 2/27/08
-// Example of a heap data structure implementation for COP 3502
-
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -38,12 +34,13 @@ int main() {
     struct heapStruct *h;
     h = initHeap();
 
-    // Test out individual inserts.
+    // Insert from input stream.
     h = readIn(h);
+    // print it
     printHeap(h);
 
+    // Delete some and print delete and new heap
     for (i=0; i<9; i++) {
-        int remd = removeMin(h) ;
         printf("Delete %d\n",removeMin(h));
         printHeap(h);
     }
@@ -137,39 +134,30 @@ void percolateDown(struct heapStruct *h, int index) {
     if ((2*index+1) <= h->size) {
         // Find the minimum value of the two children of this node.
         min = minimum(h->heaparray[2*index], 2*index, h->heaparray[2*index+1], 2*index+1);
-
         // If this value is less than the current value, then we need to move
         // our current value down the heap.
-        if (h->heaparray[index] > h->heaparray[min]) {
+        if (h->heaparray[index] > h->heaparray[min]){
             swap(h, index, min);
             // This part is recursive and allows us to continue percolating down the element in question.
             percolateDown(h, min);
         }
     }
-
-    // Case where our current element has exactly one child, a left child.
+    // Crrent element has exactly one child, a left child.
     else if (h->size == 2*index) {
-
         // Here we only compare the current item to its only child.
-        // Clearly, no recursive call is needed since the child of this node
-        // is a leaf.
-        if (h->heaparray[index] > h->heaparray[2*index])
-            swap(h, index, 2*index);
+        // No recursive call is needed since the child of this node is a leaf.
+        if (h->heaparray[index] > h->heaparray[2*index]) swap(h, index, 2*index);
     }
 }
 
 // Runs percolate up on the heap pointed to by h on the node stored in index.
 void percolateUp(struct heapStruct *h, int index) {
-
     // Can only percolate up if the node isn't the root.
     if (index > 1) {
-
         // See if our current node is smaller in value than its parent.
         if (h->heaparray[index/2] > h->heaparray[index]) {
-
             // Move our node up one level.
             swap(h, index, index/2);
-
             // See if it needs to be done again.
             percolateUp(h, index/2);
         }
@@ -178,23 +166,19 @@ void percolateUp(struct heapStruct *h, int index) {
 
 // Inserts value into the heap pointed to by h.
 void insert(struct heapStruct *h, int value) {
-
     int* temp;
     int* throwaway;
     int i;
 
     // Our array is full, we need to allocate some new space!
     if (h->size == h->capacity) {
-
         // We will double the size of the structure.
         h->capacity *= 2;
-
         // Allocate new space for an array.
         temp = (int*)malloc(sizeof(int)*h->capacity+1);
 
         // Copy all the items over.
-        for (i=1; i<=h->capacity; i++)
-            temp[i] = h->heaparray[i];
+        for (i=1; i<=h->capacity; i++) temp[i] = h->heaparray[i];
 
         // Move the pointer and free the old memory.
         throwaway = h->heaparray;
@@ -210,39 +194,27 @@ void insert(struct heapStruct *h, int value) {
 }
 
 int removeMin(struct heapStruct *h) {
-
     int retval;
-
     // We can only remove an element, if one exists in the heap!
     if (h->size > 0) {
-
         // This is where the minimum is stored.
         retval = h->heaparray[1];
-
         // Copy the last value into this top slot.
         h->heaparray[1] = h->heaparray[h->size];
-
         // Our heap will have one fewer items.
         h->size--;
-
         // Need to let this value move down to its rightful spot in the heap.
         percolateDown(h, 1);
-
         // Now we can return our value.
         return retval;
     }
-
-    // No value to return, indicate failure with a -1.
-    else
-        return -1;
+    else return -1;
 }
 
 // For debugging purposes, lets us see what's in the heap.
 void printHeap(struct heapStruct *h) {
     int i;
-
-    for (i=1; i<=h->size; i++)
-        printf("%d ", h->heaparray[i]);
+    for (i=1; i<=h->size; i++) printf("%d ", h->heaparray[i]);
     printf("\n");
 }
 
@@ -255,21 +227,13 @@ void swap(struct heapStruct *h, int index1, int index2) {
 
 // Returns indexa if a < b, and returns indexb otherwise.
 int minimum(int a, int indexa, int b, int indexb) {
-
-    // Return the value associated with a.
-    if (a < b)
-        return indexa;
-
-    // Return the value associated with b.
-    else
-        return indexb;
+    return ( a < b ) ? indexa : indexb ;
 }
 
 // Runs a heap sort by creating a heap out of the values in the array, and then
 // extracting those values one-by-one from the heap back into the array in the
 // proper order.
 void sort(int values[], int length) {
-
      struct heapStruct *h;
      int i;
 
@@ -279,9 +243,7 @@ void sort(int values[], int length) {
 
      // Remove these values from the heap one by one and store them back in the
      // original array.
-     for (i=0; i<length; i++) {
-         values[i] = removeMin(h);
-     }
+     for (i=0; i<length; i++) values[i] = removeMin(h);
 }
 
 
