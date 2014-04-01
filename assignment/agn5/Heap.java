@@ -34,8 +34,9 @@ public class Heap {
         return this.h ;
     }
 
-    public void delete_max(){
+    public int delete_max(){
         // swap root with bottom leftmost
+        int max = h[1] ;
         swap(1,this.h.length-1);
         // create a new array with same elements original excluding last element
         int[] nn = new int[this.h.length-1];
@@ -43,6 +44,26 @@ public class Heap {
         this.h = nn ;
         // resort bottoms up
         heapBottomsUp();
+        return max ;
+    }
+    public void insert( int in ){
+        int n = this.h.length/2 ;
+        int[] t = new int[this.h.length+1];
+        System.arraycopy(this.h,0,t,0,this.h.length);
+        t[this.h.length] = in ;
+        this.h = t ;
+
+        int i = this.h.length-1 ;
+        while ( i > 0 ){
+            if ( h[i/2] < h[i] ) swap(i,i/2);
+            else break;
+            i = i/2 ;
+        }
+    }
+    public void heapSort(){
+        heapBottomsUp();
+        for ( int i = this.h.length-1 ; i > 0 ; i-- ) System.out.print(delete_max()+" ");
+        System.out.println();
     }
     public void readIn(String fileName){
         Scanner scan = null ;
@@ -57,17 +78,14 @@ public class Heap {
             else if ( aLine[0].equals("print")) this.print();
             else if ( aLine[0].equals("build-heap")) this.heapBottomsUp();
             else if ( aLine[0].equals("delete-max")) this.delete_max();
-            else if ( aLine[0].equals("insert")){
-
-            }
-            else if ( aLine[0].equals("heap-sort")){
-
-            }
+            else if ( aLine[0].equals("insert")) insert(Integer.parseInt(aLine[1]));
+            else if ( aLine[0].equals("heapsort")) heapSort();
             else{
                 System.out.println("Error: Input file Malformed");
             }
         }
     }
+
     public void print(){
         if ( this.h.length > 1 )
             for ( int i = 1 ; i < this.h.length ; i++ ) System.out.print(h[i]+" ");
