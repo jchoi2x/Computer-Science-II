@@ -1,19 +1,36 @@
+/**
+ * Name:   James Choi
+ * Course: Computer-Science II
+ * Assignment #5 Heaps
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Heap {
     private int[] h;
+    /**
+     * Initializes private int[] h with a -1 before calling
+     * file read method to process input file.
+     * @param fileName
+     */
     public Heap(String fileName){
         this.h = new int[]{-1};
         this.readIn(fileName);
     }
+    /**
+     * Loads given String array, into private int[] h
+     * @param list
+     */
     public void load(String[] list){
         this.h = new int[list.length];
         this.h[0] = -1 ;
         for ( int i = 1 ; i < list.length ; i++ ) this.h[i] = Integer.parseInt(list[i]);
     }
-
+    /**
+     * Sorts private int[] h using bottoms up approach
+     * @return Heap sorted bottoms up
+     */
     public int[] heapBottomsUp(){
         int n = this.h.length-1 ;
         for ( int i = this.h.length/2 ; i > 0 ; i-- ){
@@ -33,26 +50,31 @@ public class Heap {
         }
         return this.h ;
     }
-
+    /**
+     * Deletes maximum val of heap by swapping root element with the last and then creating a new
+     * array thats a copy of original, excluding the last element
+     * @return The value of the deleted element
+     */
     public int delete_max(){
-        // swap root with bottom leftmost
         int max = h[1] ;
         swap(1,this.h.length-1);
-        // create a new array with same elements original excluding last element
         int[] nn = new int[this.h.length-1];
         System.arraycopy(this.h, 0, nn, 0, this.h.length-1);
         this.h = nn ;
-        // resort bottoms up
         heapBottomsUp();
         return max ;
     }
+    /**
+     * Inserts into heap by placing the value to insert at the end of the array and then
+     * comparing with parent node and swapping if inserted element is greater than.
+     * @param in Value to insert into heap
+     */
     public void insert( int in ){
         int n = this.h.length/2 ;
         int[] t = new int[this.h.length+1];
         System.arraycopy(this.h,0,t,0,this.h.length);
         t[this.h.length] = in ;
         this.h = t ;
-
         int i = this.h.length-1 ;
         while ( i > 0 ){
             if ( h[i/2] < h[i] ) swap(i,i/2);
@@ -60,6 +82,10 @@ public class Heap {
             i = i/2 ;
         }
     }
+    /**
+     * Prints the values of heap in decreasing order by 1. creating a heap, and then
+     * 2. For n-1 number of times removing the maximum and printing it, until no elements left
+     */
     public void heapSort(){
         heapBottomsUp();
         for ( int i = this.h.length-1 ; i > 0 ; i-- ) System.out.print(delete_max()+" ");
@@ -67,34 +93,34 @@ public class Heap {
     }
     public void readIn(String fileName){
         Scanner scan = null ;
-        try{
-            scan = new Scanner(new File(fileName));
-        }catch(FileNotFoundException ex){
-            System.out.println("File Not Found");
-        }
+        try{scan = new Scanner(new File(fileName));}
+        catch(FileNotFoundException ex){ System.out.println("File Not Found");}
         while (scan.hasNextLine()){
             String[] aLine = scan.nextLine().split("\\s+");
-            if ( aLine[0].equals("load")) this.load(aLine);
-            else if ( aLine[0].equals("print")) this.print();
-            else if ( aLine[0].equals("build-heap")) this.heapBottomsUp();
-            else if ( aLine[0].equals("delete-max")) this.delete_max();
-            else if ( aLine[0].equals("insert")) insert(Integer.parseInt(aLine[1]));
-            else if ( aLine[0].equals("heapsort")) heapSort();
-            else{
-                System.out.println("Error: Input file Malformed");
-            }
+            if ( aLine[0].equals("load"))            load(aLine);
+            else if ( aLine[0].equals("print"))      print();
+            else if ( aLine[0].equals("build-heap")) heapBottomsUp();
+            else if ( aLine[0].equals("delete-max")) delete_max();
+            else if ( aLine[0].equals("insert"))     insert(Integer.parseInt(aLine[1]));
+            else if ( aLine[0].equals("heapsort"))   heapSort();
+            else System.out.println("Error: Input file Malformed");
         }
     }
-
+    /**
+     * Prints the current private int[] h from indexes 1 to n
+     */
     public void print(){
-        if ( this.h.length > 1 )
-            for ( int i = 1 ; i < this.h.length ; i++ ) System.out.print(h[i]+" ");
+        if ( this.h.length > 1 ) for ( int i = 1 ; i < this.h.length ; i++ ) System.out.print(h[i]+" ");
         else System.out.print("( Empty )");
         System.out.println();
     }
-    public int[] getHeap(){
-        return this.h ;
-    }
+
+    /**
+     * Swaps values in Index 1 and Index 2 of private int[] h by using
+     * h[0] as a placeholder and then restoring it to -1 before returning
+     * @param a Index 1
+     * @param b Index 2
+     */
     public void swap(int a, int b){
         this.h[0] = this.h[a];
         this.h[a] = this.h[b];
