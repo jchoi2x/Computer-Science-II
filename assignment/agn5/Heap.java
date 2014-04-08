@@ -15,17 +15,17 @@ public class Heap {
      * @param fileName
      */
     public Heap(String fileName){
-        this.h = new int[]{-1};
-        this.readIn(fileName);
+        this.h = new int[]{-1};                                 // Make an initial int array
+        this.readIn(fileName);                                  // Read in the input file.
     }
     /**
      * Loads given String array, into private int[] h
      * @param list
      */
     public void load(String[] list){
-        this.h = new int[list.length];
-        this.h[0] = -1 ;
-        for ( int i = 1 ; i < list.length ; i++ ) this.h[i] = Integer.parseInt(list[i]);
+        this.h = new int[list.length];                          // Make an int[] that is the size of the given String[]
+        this.h[0] = -1 ;                                        // Insert a sentinal in the first index
+        for ( int i = 1 ; i < list.length ; i++ ) this.h[i] = Integer.parseInt(list[i]); // Copy all elements except first of string[] as ints
     }
     /**
      * Sorts private int[] h using bottoms up approach
@@ -56,13 +56,13 @@ public class Heap {
      * @return The value of the deleted element
      */
     public int delete_max(){
-        int max = h[1] ;
-        swap(1,this.h.length-1);
+        int max = h[1] ;                                        // Max (root) should be sitting at the top ie H[1]
+        swap(1,this.h.length-1);                                // Swap root with bottom leftmost
         int[] nn = new int[this.h.length-1];
-        System.arraycopy(this.h, 0, nn, 0, this.h.length-1);
-        this.h = nn ;
-        heapBottomsUp();
-        return max ;
+        System.arraycopy(this.h, 0, nn, 0, this.h.length-1);    // Remove last element by copying all but the last index into a new array
+        this.h = nn ;                                           // Make this.heap the newly created array
+        heapBottomsUp();                                        // Resort
+        return max ;                                            // Return what was deleted, the max
     }
     /**
      * Inserts into heap by placing the value to insert at the end of the array and then
@@ -70,20 +70,20 @@ public class Heap {
      * @param in Value to insert into heap
      */
     public void insert( int in ){
-        int n = this.h.length/2 ;
         int[] t = new int[this.h.length+1];
         System.arraycopy(this.h,0,t,0,this.h.length);
         t[this.h.length] = in ;
         this.h = t ;
-        int i = this.h.length-1 ;
-        while ( i > 0 ){
-            if ( h[i/2] < h[i] ) swap(i,i/2);
-            else break;
-            i = i/2 ;
-        }
+        percolate(h.length-1);
+    }
+    public void percolate(int i){
+        if ( i <= 0 ) return ;
+        if ( h[i/2] < h[i] ) swap(i,i/2);
+        percolate(i/2);
     }
     /**
-     * Prints the values of heap in decreasing order by 1. creating a heap, and then
+     * Prints the values of heap in decreasing order by
+     * 1. creating a heap, and then
      * 2. For n-1 number of times removing the maximum and printing it, until no elements left
      */
     public void heapSort(){
@@ -114,7 +114,6 @@ public class Heap {
         else System.out.print("( Empty )");
         System.out.println();
     }
-
     /**
      * Swaps values in Index 1 and Index 2 of private int[] h by using
      * h[0] as a placeholder and then restoring it to -1 before returning
@@ -129,7 +128,6 @@ public class Heap {
     }
 
     public static void main(String[] args){
-        int[] h = {-1,2,9,7,6,5,8};
         Heap heap = new Heap("heapOps.txt");
     }
 }
