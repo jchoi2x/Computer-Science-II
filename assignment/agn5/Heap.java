@@ -76,10 +76,23 @@ public class Heap {
         this.h = t ;
         percolate(h.length-1);
     }
-    public void percolate(int i){
+    public void percolateUp(int i){
         if ( i <= 0 ) return ;
         if ( h[i/2] < h[i] ) swap(i,i/2);
         percolate(i/2);
+    }
+    public void percolateDown(int i){
+        if ( 2*i+1 < h.length ){
+            // find min of two children
+           int maxIndex = (h[2*i+1] > h[2*i]) ? 2*i+1 : 2*i;
+           if (h[i] < h[maxIndex]){
+               swap(i,maxIndex);
+               percolateDown(maxIndex);
+           }
+        }
+        else if (h.length-1 == 2*i ) {
+            if ( h[i] < h[2*i] ) swap(i,2*i);
+        }
     }
     /**
      * Prints the values of heap in decreasing order by
@@ -103,6 +116,7 @@ public class Heap {
             else if ( aLine[0].equals("delete-max")) delete_max();
             else if ( aLine[0].equals("insert"))     insert(Integer.parseInt(aLine[1]));
             else if ( aLine[0].equals("heapsort"))   heapSort();
+            else if ( aLine[0].equals("percolateDown"))   percolateDown(0);
             else System.out.println("Error: Input file Malformed");
         }
     }

@@ -1,16 +1,4 @@
 load 2 9 7 6 5 8
 print
-build-heap
-print
-delete-max
-print
-heapsort
-insert 3
-print
-load 9
-build-heap
-insert 2 
-print
-delete-max
-delete-max
+percolateDown
 print

@@ -11,8 +11,17 @@ struct heapStruct {
     int size;
 };
 
-struct heapStruct *initHeap();
+/**
+ * Initialize heap
+ */
+struct heapStruct * initHeap();
+/**
+ * Create Heap from array
+ */
 struct heapStruct * initHeapfromArray(int* values, int length);
+/*
+ * Make heapStruct * h into a heap
+ */
 void heapify(struct heapStruct *h);
 void percolateDown(struct heapStruct *h, int index);
 void percolateUp(struct heapStruct *h, int index);
@@ -59,7 +68,6 @@ int main() {
     system("echo \"done\"");
     return 0;
 }
-
 struct heapStruct * readIn(struct heapStruct * heap ){
     int n =  0 ;
     int i = 0 ;
@@ -72,7 +80,6 @@ struct heapStruct * readIn(struct heapStruct * heap ){
     }
     return heap ;
 }
-// Initialize an empty heap with a capacity of SIZE.
 struct heapStruct* initHeap() {
 
     struct heapStruct* h;
@@ -114,8 +121,6 @@ struct heapStruct * initHeapfromArray(int* values, int length) {
     return h;
 }
 
-// h points to a heap structure that has values inside of it, but isn't yet
-// organized into a heap and does exactly that.
 void heapify(struct heapStruct *h) {
 
     int i;
