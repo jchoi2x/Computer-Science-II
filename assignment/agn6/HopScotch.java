@@ -101,12 +101,6 @@ public class HopScotch {
         }
     }
 
-    public void print(){
-        System.out.println();
-
-        for ( int i = 0 ; i < F.length-1 ; i++ ) System.out.print(F[i]+", ");
-        System.out.println(F[F.length-1]);
-    }
     public static void main(String[] args) {
         new HopScotch("infile.txt");
     }
