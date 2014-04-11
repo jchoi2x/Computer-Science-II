@@ -9,11 +9,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Arrays;
 
 
 public class HopScotch {
-    private int[] C;                    // Gameboard
+    private int[] F;                    // Gameboard
     public HopScotch(String fileName) {
+        int[] F = new int[7];
+        for ( int i = 0 ; i < F.length ; i++ ) F[i] = i ;
         readIn(fileName);
     }
 
@@ -24,9 +27,16 @@ public class HopScotch {
      * @return Minimum score possible
      */
     public int hop(int n) {
-        this.C = new int[n + 1];
-        for (int i = 0; i < n + 1; i++) this.C[i] = i;
-        return hops(C.length-1,0);
+        if ( n >= F.length ) {
+            int[] rtn = new int[n+1];
+            Arrays.fill(rtn,0);
+            System.arraycopy(F,0,rtn,0,F.length);
+            this.F = rtn ;
+            return hops(n);
+        }
+        else{
+            return F[n] ;
+        }
     }
     /**
      * Recursive method determines minimal score possible starting at cIndex
@@ -34,23 +44,38 @@ public class HopScotch {
      * @param score Recursively accumulating value
      * @return Minimal score possible on the hopscotch board
      */
-    private int hops(int cIndex, int score) {
-        // Anything less than a seven can only single step
-        if ( cIndex < 7 ) return score+cIndex;
+    private int hops(int n) {
+        for ( int i = 7 ; i < n ; i++ ){
+            byte bin = 0 ;
+            if (isPrime(n)) bin+= 0b001 ;
+            if( i%11 == 0) bin+=  0b010 ;
+            if ( i%7 == 0 ) bin+= 0b100 ;
 
-        // If prime, there is only two paths that can be taken. Case 1 and 2
-        if ( isPrime(C[cIndex])) return min(hops(cIndex-C[cIndex]%10,score+3),hops(cIndex-1,score+1 ));
-
-        // If both multiple of seven AND a multiple of 11, Case 1, 3 and 4
-        int s = C[cIndex]%7 ;   // Cache this computation value
-        int e = C[cIndex]%11 ;  // Cache this computation value
-        if ( s == 0 && e == 0 ) return min(min(hops(cIndex-digitSum(C[cIndex]),score+4),hops(cIndex-4,score+2)),hops(cIndex-1,score+1));
-        // If only multiple of seven, return minimum b/t Case 4 and 1
-        else if ( s == 0 ) return min(hops(cIndex-4,score+2),hops(cIndex-1,score+1));
-        // If only multiple of seven, return minimum b/t Case 3 and 1
-        else if ( e == 0 ) return min(hops(cIndex-digitSum(C[cIndex]),score+4),hops(cIndex-1,score+1));
-        // Otherwise single step Case 1
-        return hops(cIndex-1,score+1);
+            switch(bin){
+                case 0b000:
+                    F[i] = F[i-1] + 1 ;
+                    break;
+                case 0b001:
+                    F[i] = min(F[i-i%10]+3,F[i-1]+1);
+                    break;
+                case 0b010:
+                    F[i] = min(F[i-digitSum(i)]+4,F[i-1]+1);
+                    break;
+                case 0b011:
+                    F[i] = min(min(F[i-i%10]+3,F[i-digitSum(i)]+4),F[n-1]+1);
+                    break;
+                case 0b100:
+                    F[i] = min(F[i-4]+2,F[i-1]+1);
+                    break;
+                case 0b110:
+                    F[i] = min(min(F[i-digitSum(i)]+4,F[i-4]+2),F[n-1]+1);
+                    break;
+                default:
+                    F[i] = F[i-1] + 1 ;
+                    break;
+            }
+        }
+        return F[n] ;
     }
 
     /**
