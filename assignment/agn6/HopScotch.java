@@ -1,9 +1,7 @@
 /**
- * Assignment #6 Hopscotch
- *
- * Name:     James Choi
- * Course:   Computer-Science II
- * Section:  Tues/Thurs 1:30PM
+ *       Name: James choi
+ *     Course: Computer-Science II Tues/Thurs 1:30PM
+ * Assignment: Assignment #6
  */
 
 import java.io.File;
@@ -13,67 +11,40 @@ import java.util.Arrays;
 
 
 public class HopScotch {
-    private int[] F;                    // Gameboard
+    private int[] F;
     public HopScotch(String fileName) {
-        int[] F = new int[7];
-        for ( int i = 0 ; i < F.length ; i++ ) F[i] = i ;
+        this.F = new int[7];
+        for ( int i = 0 ; i < 7 ; i++ ) this.F[i] = i ;
         readIn(fileName);
     }
 
     /**
-     * Wrapper for recursive method. Reinitializes C (gameboard) and calls
-     * recursive method.
-     * @param n Order of row
-     * @return Minimum score possible
+     * Finds minimum score possible to reach end of row
+     * @param n Starting box number
+     * @return
      */
-    public int hop(int n) {
-        if ( n >= F.length ) {
-            int[] rtn = new int[n+1];
-            Arrays.fill(rtn,0);
-            System.arraycopy(F,0,rtn,0,F.length);
-            this.F = rtn ;
-            return hops(n);
-        }
-        else{
-            return F[n] ;
-        }
-    }
-    /**
-     * Recursive method determines minimal score possible starting at cIndex
-     * @param cIndex Current index of the recursive call
-     * @param score Recursively accumulating value
-     * @return Minimal score possible on the hopscotch board
-     */
-    private int hops(int n) {
-        for ( int i = 7 ; i < n ; i++ ){
-            byte bin = 0 ;
-            if (isPrime(n)) bin+= 0b001 ;
-            if( i%11 == 0) bin+=  0b010 ;
-            if ( i%7 == 0 ) bin+= 0b100 ;
+    private int hop(int n) {
+        int l = 0;
 
-            switch(bin){
-                case 0b000:
-                    F[i] = F[i-1] + 1 ;
-                    break;
-                case 0b001:
-                    F[i] = min(F[i-i%10]+3,F[i-1]+1);
-                    break;
-                case 0b010:
-                    F[i] = min(F[i-digitSum(i)]+4,F[i-1]+1);
-                    break;
-                case 0b011:
-                    F[i] = min(min(F[i-i%10]+3,F[i-digitSum(i)]+4),F[n-1]+1);
-                    break;
-                case 0b100:
-                    F[i] = min(F[i-4]+2,F[i-1]+1);
-                    break;
-                case 0b110:
-                    F[i] = min(min(F[i-digitSum(i)]+4,F[i-4]+2),F[n-1]+1);
-                    break;
-                default:
-                    F[i] = F[i-1] + 1 ;
-                    break;
-            }
+        if ( n < F.length ) return F[n] ;
+
+        int[] rtn = new int[n+1];
+        l = F.length-1 ;
+        Arrays.fill(rtn,0);
+        System.arraycopy(F,0,rtn,0,F.length);
+        this.F = rtn ;
+
+        for ( int i = l+1 ; i <= n ; i++ ){
+            boolean prime = isPrime(i);
+            boolean factor11 = (i%11 == 0);
+            boolean factor7 = (i%7 == 0);
+
+            if ( prime & factor11 ) F[i] = 9 ;
+            else if ( factor11 & factor7 ) F[i] = min(min(F[i-digitSum(i)]+4,F[i-4]+2),F[i-1]+1);
+            else if ( prime ) F[i] = min(F[i-i%10]+3,F[i-1]+1);
+            else if ( factor7  ) F[i] = min(F[i-4]+2,F[i-1]+1);
+            else if ( factor11 ) F[i] = min(F[i-digitSum(i)]+4,F[i-1]+1);
+            else F[i] = F[i-1] + 1 ;
         }
         return F[n] ;
     }
@@ -108,7 +79,7 @@ public class HopScotch {
      */
     private boolean isPrime(int a) {
         if (a < 10 || a % 2 == 0) return false;
-        for ( int i = (int) Math.ceil((Math.sqrt(a))) ; i > 2; i--)
+        for ( int i = (int) Math.ceil((Math.sqrt(a))) ; i > 1; i--)
             if (a % i == 0) return false;
         return true;
     }
@@ -130,6 +101,12 @@ public class HopScotch {
         }
     }
 
+    public void print(){
+        System.out.println();
+
+        for ( int i = 0 ; i < F.length-1 ; i++ ) System.out.print(F[i]+", ");
+        System.out.println(F[F.length-1]);
+    }
     public static void main(String[] args) {
         new HopScotch("infile.txt");
     }
