@@ -3,7 +3,6 @@
  *     Course: Computer-Science II Tues/Thurs 1:30PM
  * Assignment: Assignment #6
  */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -24,10 +23,10 @@ public class HopScotch {
      * @return
      */
     private int hop(int n) {
-        int l = 0;
 
         if ( n < F.length ) return F[n] ;
 
+        int l = 0;
         int[] rtn = new int[n+1];
         l = F.length-1 ;
         Arrays.fill(rtn,0);
