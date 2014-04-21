@@ -60,7 +60,7 @@ public class HopScotch {
 
     private int recHop(int n){
         //if ( F[n] != 0 ) return F[n] ;
-        if ( n < 7 || F[n] != 0 ) return F[n] ;
+        if ( F[n] != 0 ) return F[n] ;
 
         // Determine if any of special cases apply
         boolean prime = isPrime(n);
