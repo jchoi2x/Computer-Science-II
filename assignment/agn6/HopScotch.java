@@ -50,15 +50,12 @@ public class HopScotch {
         if ( n < F.length ){
             return F[n] ;
         }
-        System.out.println("F Size: "+F.length);
         int[] rtn = new int[n+1] ;
         Arrays.fill(rtn,0);                   // Initially fill with 0's
         System.arraycopy(F,0,rtn,0,F.length); // Copy all the old values of F into new Array
         this.F = rtn ;                        // Make F refer to the resize Array
-        System.out.println("F Size: "+F.length);
 
         return recHop(n);
-
     }
 
     private int recHop(int n){
