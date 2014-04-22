@@ -46,6 +46,35 @@ public class HopScotch {
         return F[n] ;
     }
 
+    private int recHopWrap(int n){
+        if ( n < F.length ){
+            return F[n] ;
+        }
+        int[] rtn = new int[n+1] ;
+        Arrays.fill(rtn,0);                   // Initially fill with 0's
+        System.arraycopy(F,0,rtn,0,F.length); // Copy all the old values of F into new Array
+        this.F = rtn ;                        // Make F refer to the resize Array
+
+        return recHop(n);
+    }
+
+    private int recHop(int n){
+        //if ( F[n] != 0 ) return F[n] ;
+        if ( F[n] != 0 ) return F[n] ;
+
+        // Determine if any of special cases apply
+        boolean prime = isPrime(n);
+        boolean factor11 = (n%11 == 0);
+        boolean factor7 = (n%7 == 0);
+
+        if ( prime & factor11 ) return 9 ;
+        else if ( factor11 & factor7 ) F[n] = min(min(recHop(n-digitSum(n))+4,recHop(n-4)+2),recHop(n-1)+1);
+        else if ( prime ) F[n] = min(recHop(n-n%10)+3,recHop(n-1)+1);
+        else if ( factor7  ) F[n] = min(recHop(n-4)+2,recHop(n-1)+1);
+        else if ( factor11 ) F[n] = min(recHop(n-digitSum(n))+4,recHop(n-1)+1);
+        else F[n] = recHop(n-1) + 1 ;
+        return F[n] ;
+    }
     /**
      * Given two ints, will return the smaller value of the two
      * @param a
@@ -91,13 +120,18 @@ public class HopScotch {
      */
     public void readIn(String fileName){
         Scanner scan = null ;
-        try{scan = new Scanner(new File(fileName));}
+        Scanner scanC = null ;
+        try{scan = new Scanner(new File(fileName)); scanC = new Scanner(System.in);}
         catch(FileNotFoundException ex){ System.out.println("File Not Found");}
 
         int numCases = Integer.parseInt(scan.nextLine());
         int i = 0 ;
+        System.out.print("Enter 1 for recursive: ");
+        int userChoice = scanC.nextInt();
+        System.out.println();
         while (scan.hasNextLine() && i < numCases ){
-            System.out.println("Game #"+(i+1)+": "+hop(Integer.parseInt(scan.nextLine())));
+            int input = Integer.parseInt(scan.nextLine());
+            System.out.println("Game #"+(i+1)+": "+((userChoice == 1) ? recHopWrap(input) : hop(input)));
             i++ ;
         }
     }
