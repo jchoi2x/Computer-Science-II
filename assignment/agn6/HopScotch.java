@@ -18,7 +18,8 @@ public class HopScotch {
     }
 
     /**
-     * Finds minimum score possible to reach end of row
+     * Iterative Solution to find minimum score possible
+     * to reach end of row
      * @param n Starting box number
      * @return Minimum score possible to reach box 0
      */
@@ -46,18 +47,21 @@ public class HopScotch {
         return F[n] ;
     }
 
+    /**
+     * Wrapper for recursive implementation of min score Hopscotch
+     * If already calculated, return value. Otherwise, resize and recurse
+     */
     private int recHopWrap(int n){
-        if ( n < F.length ){
-            return F[n] ;
-        }
+        if ( n < F.length ) return F[n] ;     // Already calculated
+        // Resize the array
         int[] rtn = new int[n+1] ;
         Arrays.fill(rtn,0);                   // Initially fill with 0's
         System.arraycopy(F,0,rtn,0,F.length); // Copy all the old values of F into new Array
         this.F = rtn ;                        // Make F refer to the resize Array
 
+        // Return the recurse
         return recHop(n);
     }
-
     private int recHop(int n){
         //if ( F[n] != 0 ) return F[n] ;
         if ( F[n] != 0 ) return F[n] ;
@@ -75,6 +79,12 @@ public class HopScotch {
         else F[n] = recHop(n-1) + 1 ;
         return F[n] ;
     }
+
+
+
+
+
+
     /**
      * Given two ints, will return the smaller value of the two
      * @param a
