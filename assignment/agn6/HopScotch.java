@@ -120,13 +120,18 @@ public class HopScotch {
      */
     public void readIn(String fileName){
         Scanner scan = null ;
-        try{scan = new Scanner(new File(fileName));}
+        Scanner scanC = null ;
+        try{scan = new Scanner(new File(fileName)); scanC = new Scanner(System.in);}
         catch(FileNotFoundException ex){ System.out.println("File Not Found");}
 
         int numCases = Integer.parseInt(scan.nextLine());
         int i = 0 ;
+        System.out.print("Enter 1 for recursive: ");
+        int userChoice = scanC.nextInt();
+        System.out.println();
         while (scan.hasNextLine() && i < numCases ){
-            System.out.println("Game #"+(i+1)+": "+recHopWrap(Integer.parseInt(scan.nextLine())));
+            int input = Integer.parseInt(scan.nextLine());
+            System.out.println("Game #"+(i+1)+": "+((userChoice == 1) ? recHopWrap(input) : hop(input)));
             i++ ;
         }
     }
